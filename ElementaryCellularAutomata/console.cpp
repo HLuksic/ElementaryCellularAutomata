@@ -29,9 +29,13 @@ struct Console::Private
 		{
 			SetAutomatonRule(self, argument);
 		}
-		else if (command == "clear")
+		else if (command == "reset")
 		{
 			self->automaton->Reset();
+		}
+		else if (command == "clear")
+		{
+			self->pge->ConsoleClear();
 		}
 		else
 		{
@@ -41,13 +45,14 @@ struct Console::Private
 
 	static void PrintHelpText()
 	{
-		std::cout << "Available commands:" << std::endl;
-		std::cout << "help - Displays this message." << std::endl;
-		std::cout << "run - Runs the simulation." << std::endl;
-		std::cout << "setrule (0 - 255) - Sets the automaton." << std::endl;
-		std::cout << "getrule - Prints the current automaton." << std::endl;
-		std::cout << "setstate (left, right, center, random) - Sets the initial generation state." << std::endl;
-		std::cout << "reset - Resets the simulation and state." << std::endl;
+		std::cout << "Available commands:\n";
+		std::cout << "help     - Displays this message.\n";
+		std::cout << "run      - Runs the simulation.\n";
+		std::cout << "setrule  - Sets the automaton. [0, 255]\n";
+		std::cout << "getrule  - Prints the current automaton.\n";
+		std::cout << "setstate - Sets the initial generation state. (left, right, center, random)\n";
+		std::cout << "reset    - Resets the simulation.\n";
+		std::cout << "clear    - Clear console history.\n" << std::endl;
 	}
 
 	static void SetAutomatonState(Console* self, const std::string& state)
@@ -70,7 +75,7 @@ struct Console::Private
 		}
 		else
 		{
-			std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random." << std::endl;
+			std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n" << std::endl;
 		}
 	}
 
@@ -80,7 +85,7 @@ struct Console::Private
 		
 		if (rule < 0 || rule > 255)
 		{
-			std::cout << "Invalid rule: '" << rule << "'. Value must be in range [0, 255]." << std::endl;
+			std::cout << "Invalid rule: '" << rule << "'. Value must be in range [0, 255].\n" << std::endl;
 			return;
 		}
 
@@ -104,6 +109,12 @@ void Console::OpenConsole()
 
 void Console::CheckInput(const std::string& text)
 {
+	if (pge->GetKey(olc::Key::A).bPressed)
+	{
+		automaton->run = true;
+		automaton->Reset();
+	}
+
 	Private::ParseCommand(this, text);
 }
 

@@ -13,6 +13,5 @@ public:
 private:
 	struct Private;
 	olc::PixelGameEngine* pge;
-	const std::string commands[6] = { "help", "setstate", "setrule", "getrule", "run", "clear"};
 	Automaton* automaton;
 };
