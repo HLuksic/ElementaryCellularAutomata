@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="automaton.cpp" />
     <ClCompile Include="console.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="automaton.h" />
     <ClInclude Include="console.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
   </ItemGroup>

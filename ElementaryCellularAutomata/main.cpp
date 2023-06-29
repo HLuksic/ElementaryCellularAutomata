@@ -3,6 +3,7 @@
 #include <random>
 #include "olcPixelGameEngine.h"
 #include "console.h"
+#include "automaton.h"
 
 class Simulator : public olc::PixelGameEngine
 {
@@ -15,6 +16,7 @@ public:
 	bool OnUserCreate() override
 	{
 		console = new Console();
+		automaton = new Automaton(ScreenHeight());
 		ConsoleCaptureStdOut(true);
 		
 		return true;
@@ -23,6 +25,7 @@ public:
 	bool OnUserUpdate(float fElapsedTime) override
 	{
 		console->OpenConsole(this);
+		automaton->Run(this);
 		
 		return true;
 	}
@@ -36,6 +39,7 @@ public:
 	
 private:
 	Console* console;
+	Automaton* automaton;
 };
 
 int main()
