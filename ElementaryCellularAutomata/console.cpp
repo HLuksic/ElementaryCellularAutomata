@@ -21,6 +21,12 @@ struct Console::Private
 		{
 			std::cout << "Starting simulation..." << std::endl;
 		}
+		/*else if (command == "setrule")
+		{
+			std::string rule = text.substr(text.find(' ') + 1);
+			try
+			{
+				self->automaton->SetRule(std::stoi(rule));
 	}
 
 	static void PrintHelpText()
