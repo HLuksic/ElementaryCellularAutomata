@@ -9,24 +9,25 @@ struct Automaton::Private
         return (rule >> ruleIndex) & 1;
     }
 
-    static void DrawGeneration(Automaton* self, const std::bitset<256>& generation, unsigned int row)
+    static void DrawGeneration(Automaton* self, const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
     {
-        for (int i = 0; i < 256; ++i) 
+        for (int i = 0; i < SCREEN_WIDTH; ++i)
         {
             if (generation.test(i)) 
             {
-                self->pge->Draw(i, row, olc::WHITE);
+                self->pge->Draw(i, row, olc::DARK_GREY);
             }
         }
     }
 
-    static void GenerateNextGeneration(std::bitset<256>& currentGeneration, std::bitset<256>& nextGeneration, unsigned int numGenerations, unsigned int rule)
+    static void GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule)
     {
-        for (int i = 0; i < 256; ++i)
+        for (int i = 0; i < SCREEN_WIDTH; ++i)
         {
-            bool left = currentGeneration[(i + 255) % 256];
+            bool left = currentGeneration[(i + (SCREEN_WIDTH - 1)) % SCREEN_WIDTH];
             bool center = currentGeneration[i];
-            bool right = currentGeneration[(i + 1) % 256];
+            bool right = currentGeneration[(i + 1) % SCREEN_WIDTH];
+
             bool nextState = GetNextState(left, center, right, rule);
 
             nextGeneration.set(i, nextState);
@@ -35,11 +36,8 @@ struct Automaton::Private
 
     static void ShowNewInitialState(Automaton* self)
     {
-        if (self->row == 0)
-        {
-            self->pge->Clear(olc::BLACK);
-            DrawGeneration(self, self->currentGeneration, self->row);
-        }
+        self->pge->Clear(olc::BLACK);
+        DrawGeneration(self, self->currentGeneration, self->row);
     }
 };
 
@@ -47,7 +45,7 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 {
     pge = engine;
 	numGenerations = screenHeight;
-    currentGeneration.set(128, true);
+    currentGeneration.set(SCREEN_WIDTH / 2, true);
     row = 0;
     rule = 30;
     run = false;
@@ -86,7 +84,7 @@ void Automaton::SetRandomStartingState()
 {
     srand(time(NULL));
     
-	for (int i = 0; i < 256; ++i)
+	for (int i = 0; i < SCREEN_WIDTH; ++i)
 	{
 		currentGeneration.set(i, rand() % 2);
 	}

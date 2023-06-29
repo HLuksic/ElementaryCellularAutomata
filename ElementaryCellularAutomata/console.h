@@ -7,7 +7,6 @@ class Console
 {
 public:
 	Console(olc::PixelGameEngine* pge, Automaton* automaton);
-	void OpenConsole();
 	void CheckInput(const std::string& text);
 
 private:

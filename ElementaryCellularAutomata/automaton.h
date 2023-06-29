@@ -3,6 +3,8 @@
 #include "olcPixelGameEngine.h"
 #include <bitset>
 
+constexpr unsigned int SCREEN_WIDTH = 760;
+
 class Automaton
 {
 public:
@@ -18,8 +20,8 @@ public:
 private:
 	struct Private;
 	olc::PixelGameEngine* pge;
-	std::bitset<256> currentGeneration;
-	std::bitset<256> nextGeneration;
+	std::bitset<SCREEN_WIDTH> currentGeneration;
+	std::bitset<SCREEN_WIDTH> nextGeneration;
 	unsigned int numGenerations;
 	unsigned int row;
 	unsigned int rule;

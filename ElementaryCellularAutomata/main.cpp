@@ -24,8 +24,18 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		console->OpenConsole();
 		automaton->Run();
+		
+		if (GetKey(olc::Key::TAB).bPressed)
+		{
+			ConsoleShow(olc::Key::TAB, true);
+		}
+
+		if (GetKey(olc::Key::CTRL).bPressed)
+		{
+			automaton->run = true;
+			automaton->Reset();
+		}
 		
 		return true;
 	}
@@ -45,7 +55,7 @@ private:
 int main()
 {
 	Simulator sim;
-	if (sim.Construct(256, 200, 4, 4))
+	if (sim.Construct(760, 380, 2, 2))
 		sim.Start();
 
 	return 0;

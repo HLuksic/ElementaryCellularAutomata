@@ -19,10 +19,11 @@ struct Console::Private
 		}
 		else if (command == "getrule")
 		{
-			std::cout << "Current rule: " << self->automaton->GetRule() << std::endl;
+			std::cout << "Current rule: " << self->automaton->GetRule() << "\n" << std::endl;
 		}
 		else if (command == "setstate")
 		{
+			self->automaton->Reset();
 			SetAutomatonState(self, argument);
 		}
 		else if (command == "setrule")
@@ -39,7 +40,7 @@ struct Console::Private
 		}
 		else
 		{
-			std::cout << "Command not found: '" << command << "'. Type 'help' for a list of commands." << std::endl;
+			std::cout << "Command not found: '" << command << "'. Type 'help' for a list of commands.\n" << std::endl;
 		}
 	}
 
@@ -63,11 +64,11 @@ struct Console::Private
 		}
 		else if (state == "right")
 		{
-			self->automaton->SetSpecificStartingState(255);
+			self->automaton->SetSpecificStartingState(SCREEN_WIDTH - 1);
 		}
 		else if (state == "center")
 		{
-			self->automaton->SetSpecificStartingState(127);
+			self->automaton->SetSpecificStartingState(SCREEN_WIDTH / 2);
 		}
 		else if (state == "random")
 		{
@@ -99,22 +100,8 @@ Console::Console(olc::PixelGameEngine* engine, Automaton* automaton)
 	this->automaton = automaton;
 }
 
-void Console::OpenConsole()
-{
-	if (pge->GetKey(olc::Key::TAB).bPressed)
-	{
-		pge->ConsoleShow(olc::Key::TAB, true);
-	}
-}
-
 void Console::CheckInput(const std::string& text)
 {
-	if (pge->GetKey(olc::Key::A).bPressed)
-	{
-		automaton->run = true;
-		automaton->Reset();
-	}
-
 	Private::ParseCommand(this, text);
 }
 
