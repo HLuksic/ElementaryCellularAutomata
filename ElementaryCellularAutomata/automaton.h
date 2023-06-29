@@ -6,14 +6,20 @@
 class Automaton
 {
 public:
-	Automaton(unsigned int screenHeight);
-	void Run(olc::PixelGameEngine* pge);
-	unsigned int rule;
-
+	Automaton(olc::PixelGameEngine* pge, unsigned int screenHeight);
+	void Run();
+	void SetRule(unsigned int rule);
+	void SetSpecificStartingState(unsigned int state);
+	void SetRandomState();
+	void Reset();
+	unsigned int GetRule();
+	
 private:
 	struct Private;
+	olc::PixelGameEngine* pge;
 	std::bitset<256> currentGeneration;
 	std::bitset<256> nextGeneration;
 	unsigned int numGenerations;
 	unsigned int row;
+	unsigned int rule;
 };

@@ -1,14 +1,18 @@
 #pragma once
 
 #include "olcPixelGameEngine.h"
+#include "automaton.h"
 
 class Console
 {
 public:
-	void OpenConsole(olc::PixelGameEngine* pge);
+	Console(olc::PixelGameEngine* pge, Automaton* automaton);
+	void OpenConsole();
 	void CheckInput(const std::string& text);
 
 private:
 	struct Private;
-	const std::string commands[5] = { "help", "reset", "setstate", "setrule", "start"};
+	olc::PixelGameEngine* pge;
+	const std::string commands[5] = { "help", "setstate", "setrule", "getrule", "run"};
+	Automaton* automaton;
 };

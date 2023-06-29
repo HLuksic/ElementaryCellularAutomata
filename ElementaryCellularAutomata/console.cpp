@@ -3,44 +3,88 @@
 
 struct Console::Private
 {
-	static void ParseCommand(const std::string& text)
+	static void ParseCommand(Console* self, const std::string& text)
 	{
-		if (text == "help")
+		std::string command = text.substr(0, text.find(' '));
+		std::string argument = text.substr(text.find(' ') + 1);
+		
+		if (command == "help")
 		{
 			PrintHelpText();
 		}
-		else if (text == "reset")
+		else if (command == "run")
 		{
-			std::cout << "Resetting simulation..." << std::endl;
+			self->automaton->Reset();
 		}
-		else if (text == "setstate")
+		else if (command == "getrule")
 		{
-			std::cout << "Setting initial state..." << std::endl;
+			std::cout << "Current rule: " << self->automaton->GetRule() << std::endl;
 		}
-		else if (text == "start")
+		else if (command == "setstate")
 		{
-			std::cout << "Starting simulation..." << std::endl;
+			SetAutomatonState(self, argument);
 		}
-		/*else if (command == "setrule")
+		else if (command == "setrule")
 		{
-			std::string rule = text.substr(text.find(' ') + 1);
-			try
-			{
-				self->automaton->SetRule(std::stoi(rule));
+			SetAutomatonRule(self, argument);
+		}
 	}
 
 	static void PrintHelpText()
 	{
 		std::cout << "Available commands:" << std::endl;
 		std::cout << "help - Displays this message." << std::endl;
-		std::cout << "reset - Resets the simulation." << std::endl;
-		std::cout << "setstate (left, right, center, random) - Sets the initial generation state." << std::endl;
+		std::cout << "run - Runs the simulation." << std::endl;
 		std::cout << "setrule (0 - 255) - Sets the automaton." << std::endl;
-		std::cout << "start - Starts the simulation." << std::endl;
+		std::cout << "getrule - Prints the current automaton." << std::endl;
+		std::cout << "setstate (left, right, center, random) - Sets the initial generation state." << std::endl;
+		std::cout << "reset - Resets the simulation and state." << std::endl;
+	}
+
+	static void SetAutomatonState(Console* self, const std::string& state)
+	{
+		if (state == "left")
+		{
+			self->automaton->SetSpecificStartingState(0);
+		}
+		else if (state == "right")
+		{
+			self->automaton->SetSpecificStartingState(255);
+		}
+		else if (state == "center")
+		{
+			self->automaton->SetSpecificStartingState(127);
+		}
+		else if (state == "random")
+		{
+			self->automaton->SetRandomState();
+		}
+		else
+		{
+			std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random." << std::endl;
+		}
+	}
+
+	static void SetAutomatonRule(Console* self, const std::string& argument)
+	{
+		int rule = std::stoi(argument);
+		
+		if (rule < 0 || rule > 255)
+		{
+			std::cout << "Invalid rule: '" << rule << "'. Value must be in range [0, 255]." << std::endl;
+		}
+
+		self->automaton->SetRule(rule);
 	}
 };
 
-void Console::OpenConsole(olc::PixelGameEngine* pge)
+Console::Console(olc::PixelGameEngine* engine, Automaton* automaton)
+{
+	this->pge = engine;
+	this->automaton = automaton;
+}
+
+void Console::OpenConsole()
 {
 	if (pge->GetKey(olc::Key::TAB).bPressed)
 	{
@@ -50,13 +94,11 @@ void Console::OpenConsole(olc::PixelGameEngine* pge)
 
 void Console::CheckInput(const std::string& text)
 {
-	if (std::find(std::begin(commands), std::end(commands), text) == std::end(commands))
-	{
-		std::cout << "Command not found: " << text << ".Type 'help' for a list of commands." << std::endl;
-		return;
-	}
-	
-	Private::ParseCommand(text);
+	if (commands->find(text.substr(0, text.find(' ')), commands->size()) == commands->end());
+
+	std::cout << "Command not found: '" << command << "'. Type 'help' for a list of commands." << std::endl;
+
+	Private::ParseCommand(this, text);
 }
 
 

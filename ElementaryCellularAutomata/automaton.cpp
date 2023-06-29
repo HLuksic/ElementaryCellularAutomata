@@ -1,4 +1,5 @@
 #include "automaton.h"
+#include <random>
 
 struct Automaton::Private
 {
@@ -8,20 +9,20 @@ struct Automaton::Private
         return (rule >> ruleIndex) & 1;
     }
 
-    static void DrawGeneration(olc::PixelGameEngine* pge, const std::bitset<256>& generation, unsigned int row)
+    static void DrawGeneration(Automaton* self, const std::bitset<256>& generation, unsigned int row)
     {
         for (int i = 0; i < 256; ++i) 
         {
             if (generation.test(i)) 
             {
-                pge->Draw(i, row, olc::WHITE);
+                self->pge->Draw(i, row, olc::WHITE);
             }
         }
     }
 
     static void GenerateNextGeneration(std::bitset<256>& currentGeneration, std::bitset<256>& nextGeneration, unsigned int numGenerations, unsigned int rule)
     {
-        for (int i = 0; i < 256; ++i) 
+        for (int i = 0; i < 256; ++i)
         {
             bool left = currentGeneration[(i + 255) % 256];
             bool center = currentGeneration[i];
@@ -33,18 +34,57 @@ struct Automaton::Private
     }
 };
 
-Automaton::Automaton(unsigned int screenHeight)
+Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 {
+    pge = engine;
 	numGenerations = screenHeight;
     currentGeneration.set(128, true);
     row = 0;
-    rule = 73;
+    rule = 30;
+    Private::DrawGeneration(this, currentGeneration, row);
 }
 
-void Automaton::Run(olc::PixelGameEngine* pge)
+void Automaton::Run()
 {
-    Private::DrawGeneration(pge, currentGeneration, row);
-    Private::GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
-    currentGeneration = nextGeneration;
-    row++;
+    if (row < pge->ScreenHeight())
+    {
+        Private::DrawGeneration(this, currentGeneration, row);
+        Private::GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
+        currentGeneration = nextGeneration;
+        row++;
+    }
+}
+
+void Automaton::SetRule(unsigned int rule)
+{
+    this->rule = rule;
+}
+
+void Automaton::SetSpecificStartingState(unsigned int index)
+{
+    currentGeneration = { false };
+    nextGeneration = { false };
+    currentGeneration.set(index, true);
+}
+
+void Automaton::SetRandomState()
+{
+    srand(time(NULL));
+    
+	for (int i = 0; i < 256; ++i)
+	{
+		currentGeneration.set(i, rand() % 2);
+	}
+}
+
+void Automaton::Reset()
+{
+    pge->Clear(olc::BLACK);
+    row = 0;
+    Private::DrawGeneration(this, currentGeneration, row);
+}
+
+unsigned int Automaton::GetRule()
+{
+    return rule;
 }

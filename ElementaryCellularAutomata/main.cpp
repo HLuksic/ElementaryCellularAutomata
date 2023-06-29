@@ -15,8 +15,8 @@ public:
 
 	bool OnUserCreate() override
 	{
-		console = new Console();
-		automaton = new Automaton(ScreenHeight());
+		automaton = new Automaton(this, ScreenHeight());
+		console = new Console(this, automaton);
 		ConsoleCaptureStdOut(true);
 		
 		return true;
@@ -24,8 +24,8 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		console->OpenConsole(this);
-		automaton->Run(this);
+		console->OpenConsole();
+		automaton->Run();
 		
 		return true;
 	}
