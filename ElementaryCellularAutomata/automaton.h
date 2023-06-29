@@ -10,9 +10,10 @@ public:
 	void Run();
 	void SetRule(unsigned int rule);
 	void SetSpecificStartingState(unsigned int state);
-	void SetRandomState();
+	void SetRandomStartingState();
 	void Reset();
 	unsigned int GetRule();
+	bool run;
 	
 private:
 	struct Private;

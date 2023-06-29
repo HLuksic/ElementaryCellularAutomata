@@ -14,6 +14,7 @@ struct Console::Private
 		}
 		else if (command == "run")
 		{
+			self->automaton->run = true;
 			self->automaton->Reset();
 		}
 		else if (command == "getrule")
@@ -27,6 +28,14 @@ struct Console::Private
 		else if (command == "setrule")
 		{
 			SetAutomatonRule(self, argument);
+		}
+		else if (command == "clear")
+		{
+			self->automaton->Reset();
+		}
+		else
+		{
+			std::cout << "Command not found: '" << command << "'. Type 'help' for a list of commands." << std::endl;
 		}
 	}
 
@@ -57,7 +66,7 @@ struct Console::Private
 		}
 		else if (state == "random")
 		{
-			self->automaton->SetRandomState();
+			self->automaton->SetRandomStartingState();
 		}
 		else
 		{
@@ -72,6 +81,7 @@ struct Console::Private
 		if (rule < 0 || rule > 255)
 		{
 			std::cout << "Invalid rule: '" << rule << "'. Value must be in range [0, 255]." << std::endl;
+			return;
 		}
 
 		self->automaton->SetRule(rule);
@@ -94,10 +104,6 @@ void Console::OpenConsole()
 
 void Console::CheckInput(const std::string& text)
 {
-	if (commands->find(text.substr(0, text.find(' ')), commands->size()) == commands->end());
-
-	std::cout << "Command not found: '" << command << "'. Type 'help' for a list of commands." << std::endl;
-
 	Private::ParseCommand(this, text);
 }
 

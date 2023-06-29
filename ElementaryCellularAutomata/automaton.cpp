@@ -32,6 +32,15 @@ struct Automaton::Private
             nextGeneration.set(i, nextState);
         }
     }
+
+    static void ShowNewInitialState(Automaton* self)
+    {
+        if (self->row == 0)
+        {
+            self->pge->Clear(olc::BLACK);
+            DrawGeneration(self, self->currentGeneration, self->row);
+        }
+    }
 };
 
 Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
@@ -41,17 +50,23 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
     currentGeneration.set(128, true);
     row = 0;
     rule = 30;
+    run = false;
     Private::DrawGeneration(this, currentGeneration, row);
 }
 
 void Automaton::Run()
 {
-    if (row < pge->ScreenHeight())
+    if (run)
     {
         Private::DrawGeneration(this, currentGeneration, row);
         Private::GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
         currentGeneration = nextGeneration;
         row++;
+        
+        if (row >= pge->ScreenHeight())
+        {
+            run = false;
+        }
     }
 }
 
@@ -63,11 +78,11 @@ void Automaton::SetRule(unsigned int rule)
 void Automaton::SetSpecificStartingState(unsigned int index)
 {
     currentGeneration = { false };
-    nextGeneration = { false };
     currentGeneration.set(index, true);
+    Private::ShowNewInitialState(this);
 }
 
-void Automaton::SetRandomState()
+void Automaton::SetRandomStartingState()
 {
     srand(time(NULL));
     
@@ -75,6 +90,8 @@ void Automaton::SetRandomState()
 	{
 		currentGeneration.set(i, rand() % 2);
 	}
+
+    Private::ShowNewInitialState(this);
 }
 
 void Automaton::Reset()
