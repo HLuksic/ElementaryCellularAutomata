@@ -7,13 +7,13 @@ bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int ru
     return (rule >> ruleIndex) & 1;
 }
 
-void Automaton::DrawGeneration(Automaton* self, const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
+void Automaton::DrawGeneration(const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
 {
     for (int i = 0; i < SCREEN_WIDTH; ++i)
     {
         if (generation.test(i)) 
         {
-            self->pge->Draw(i, row, olc::DARK_GREY);
+            pge->Draw(i, row, olc::DARK_GREY);
         }
     }
 }
@@ -31,10 +31,10 @@ void Automaton::GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGenerat
     }
 }
 
-void Automaton::ShowNewInitialState(Automaton* self)
+void Automaton::ShowNewInitialState()
 {
-    self->pge->Clear(olc::BLACK);
-    DrawGeneration(self, self->currentGeneration, self->row);
+    pge->Clear(olc::BLACK);
+    DrawGeneration(currentGeneration, row);
 }
 
 Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
@@ -45,14 +45,14 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
     row = 0;
     rule = 30;
     run = false;
-    DrawGeneration(this, currentGeneration, row);
+    DrawGeneration(currentGeneration, row);
 }
 
 void Automaton::Run()
 {
     if (run)
     {
-        DrawGeneration(this, currentGeneration, row);
+        DrawGeneration(currentGeneration, row);
         GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
         currentGeneration = nextGeneration;
         row++;
@@ -73,7 +73,7 @@ void Automaton::SetSpecificStartingState(unsigned int index)
 {
     currentGeneration = { false };
     currentGeneration.set(index, true);
-    ShowNewInitialState(this);
+    ShowNewInitialState();
 }
 
 void Automaton::SetRandomStartingState()
@@ -85,14 +85,14 @@ void Automaton::SetRandomStartingState()
 		currentGeneration.set(i, rand() % 2);
 	}
 
-    ShowNewInitialState(this);
+    ShowNewInitialState();
 }
 
 void Automaton::Clear()
 {
     pge->Clear(olc::BLACK);
     row = 0;
-    DrawGeneration(this, currentGeneration, row);
+    DrawGeneration(currentGeneration, row);
 }
 
 void Automaton::ClearAndRun()

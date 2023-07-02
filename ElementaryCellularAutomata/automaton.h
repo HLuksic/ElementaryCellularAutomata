@@ -20,9 +20,9 @@ public:
 	
 private:
 	bool GetNextState(bool left, bool center, bool right, unsigned int rule);
-	void DrawGeneration(Automaton* self, const std::bitset<SCREEN_WIDTH>& generation, unsigned int row);
+	void DrawGeneration(const std::bitset<SCREEN_WIDTH>& generation, unsigned int row);
 	void GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule);
-	void ShowNewInitialState(Automaton* self);
+	void ShowNewInitialState();
 	olc::PixelGameEngine* pge;
 	std::bitset<SCREEN_WIDTH> currentGeneration;
 	std::bitset<SCREEN_WIDTH> nextGeneration;
