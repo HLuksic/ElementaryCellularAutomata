@@ -6,11 +6,13 @@
 class Console
 {
 public:
-	Console(olc::PixelGameEngine* pge, Automaton* automaton);
-	void CheckInput(const std::string& text);
+	Console(Automaton* automaton);
+	void ParseCommand(olc::PixelGameEngine* pge, const std::string& text);
 
 private:
-	struct Private;
+	void PrintHelpText();
+	void SetAutomatonState(const std::string& state);
+	void SetAutomatonRule(const std::string& argument);
 	olc::PixelGameEngine* pge;
 	Automaton* automaton;
 };

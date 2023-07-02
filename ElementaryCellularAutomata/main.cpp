@@ -16,7 +16,7 @@ public:
 	bool OnUserCreate() override
 	{
 		automaton = new Automaton(this, ScreenHeight());
-		console = new Console(this, automaton);
+		console = new Console(automaton);
 		ConsoleCaptureStdOut(true);
 		
 		return true;
@@ -42,7 +42,7 @@ public:
 
 	bool OnConsoleCommand(const std::string& text) override
 	{
-		console->CheckInput(text);
+		console->ParseCommand(this, text);
 
 		return true;
 	}
