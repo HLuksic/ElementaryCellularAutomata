@@ -18,22 +18,14 @@ public:
 		automaton = new Automaton(this, ScreenHeight());
 		console = new Console(automaton);
 		ConsoleCaptureStdOut(true);
+
 		return true;
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
 		automaton->Run();
-		
-		if (GetKey(olc::Key::TAB).bPressed)
-		{
-			ConsoleShow(olc::Key::TAB, true);
-		}
-
-		if (GetKey(olc::Key::CTRL).bPressed)
-		{
-			automaton->ClearAndRun();
-		}
+		CaptureShortcuts();
 		
 		return true;
 	}
@@ -46,6 +38,24 @@ public:
 	}
 	
 private:
+	void CaptureShortcuts()
+	{
+		if (GetKey(olc::Key::TAB).bPressed)
+		{
+			ConsoleShow(olc::Key::TAB, true);
+		}
+
+		if (GetKey(olc::Key::CTRL).bPressed && !IsConsoleShowing())
+		{
+			automaton->ClearAndRun();
+		}
+
+		if (GetKey(olc::Key::C).bPressed && !IsConsoleShowing())
+		{
+			automaton->Clear();
+		}
+	}
+
 	Console* console;
 	Automaton* automaton;
 };
@@ -53,7 +63,7 @@ private:
 int main()
 {
 	Simulator sim;
-	if (sim.Construct(760, 380, 2, 2))
+	if (sim.Construct(760, 380, 2, 2/*, false, true*/))
 		sim.Start();
 
 	return 0;

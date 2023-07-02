@@ -1,14 +1,19 @@
 #include "console.h"
 #include <iostream>
 
+Console::Console(Automaton* automaton)
+{
+	this->automaton = automaton;
+}
+
 void Console::PrintHelpText()
 {
 	std::cout << "Available commands:\n";
-	std::cout << "help		   - Displays this message.\n";
-	std::cout << "run		   - Runs the simulation.\n";
-	std::cout << "setrule	   - Sets the automaton. [0, 255]\n";
-	std::cout << "getrule	   - Prints the current automaton.\n";
-	std::cout << "setstate	   - Sets the initial generation state. (left, right, center, random)\n";
+	std::cout << "help         - Displays this message.\n";
+	std::cout << "run          - Runs the simulation.\n";
+	std::cout << "setrule      - Sets the automaton. [0, 255]\n";
+	std::cout << "getrule      - Prints the current automaton.\n";
+	std::cout << "setstate     - Sets the initial generation state. (left, right, center, random)\n";
 	std::cout << "reset        - Resets the simulation.\n";
 	std::cout << "clear        - Clear screen.\n";
 	std::cout << "clearconsole - Clear console history.\n" << std::endl;
@@ -52,11 +57,6 @@ void Console::SetAutomatonRule(const std::string& argument)
 	}
 
 	automaton->SetRule(rule);
-}
-
-Console::Console(Automaton* automaton)
-{
-	this->automaton = automaton;
 }
 
 std::string Console::Trim(const std::string& text)

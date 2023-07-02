@@ -1,10 +1,15 @@
 #include "automaton.h"
 #include <random>
 
-bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int rule) 
+Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 {
-    unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
-    return (rule >> ruleIndex) & 1;
+    pge = engine;
+    numGenerations = screenHeight;
+    currentGeneration.set(SCREEN_WIDTH / 2, true);
+    row = 0;
+    rule = 30;
+    run = false;
+    DrawGeneration(currentGeneration, row);
 }
 
 void Automaton::DrawGeneration(const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
@@ -16,6 +21,12 @@ void Automaton::DrawGeneration(const std::bitset<SCREEN_WIDTH>& generation, unsi
             pge->Draw(i, row, olc::DARK_GREY);
         }
     }
+}
+
+bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int rule)
+{
+    unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
+    return (rule >> ruleIndex) & 1;
 }
 
 void Automaton::GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule)
@@ -37,17 +48,6 @@ void Automaton::ShowNewInitialState()
     DrawGeneration(currentGeneration, row);
 }
 
-Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
-{
-    pge = engine;
-	numGenerations = screenHeight;
-    currentGeneration.set(SCREEN_WIDTH / 2, true);
-    row = 0;
-    rule = 30;
-    run = false;
-    DrawGeneration(currentGeneration, row);
-}
-
 void Automaton::Run()
 {
     if (run)
@@ -62,6 +62,11 @@ void Automaton::Run()
             run = false;
         }
     }
+}
+
+unsigned int Automaton::GetRule()
+{
+    return rule;
 }
 
 void Automaton::SetRule(unsigned int rule)
@@ -92,16 +97,12 @@ void Automaton::Clear()
 {
     pge->Clear(olc::BLACK);
     row = 0;
+    run = false;
     DrawGeneration(currentGeneration, row);
 }
 
 void Automaton::ClearAndRun()
 {
-    run = true;
     Clear();
-}
-
-unsigned int Automaton::GetRule()
-{
-    return rule;
+    run = true;
 }
