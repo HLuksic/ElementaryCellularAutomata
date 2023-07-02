@@ -18,7 +18,6 @@ public:
 		automaton = new Automaton(this, ScreenHeight());
 		console = new Console(automaton);
 		ConsoleCaptureStdOut(true);
-		
 		return true;
 	}
 

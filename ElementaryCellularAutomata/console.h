@@ -13,5 +13,6 @@ private:
 	void PrintHelpText();
 	void SetAutomatonState(const std::string& state);
 	void SetAutomatonRule(const std::string& argument);
+	std::string Trim(const std::string& text);
 	Automaton* automaton;
 };
