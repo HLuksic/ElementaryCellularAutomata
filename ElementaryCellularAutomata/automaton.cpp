@@ -4,22 +4,21 @@
 Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 {
     pge = engine;
-    numGenerations = screenHeight;
-    currentGeneration.set(SCREEN_WIDTH / 2, true);
+    width = pge->ScreenWidth();
+    currentGeneration.resize(width);
+    nextGeneration.resize(width);
+    currentGeneration.at(width / 2) = true;
     row = 0;
     rule = 30;
     run = false;
     DrawGeneration(currentGeneration, row);
 }
 
-void Automaton::DrawGeneration(const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
+void Automaton::DrawGeneration(std::vector<bool>& generation, unsigned int row)
 {
-    for (int i = 0; i < SCREEN_WIDTH; ++i)
+    for (int i = 0; i < width; ++i)
     {
-        if (generation.test(i)) 
-        {
-            pge->Draw(i, row, olc::DARK_GREY);
-        }
+        generation.at(i) ? pge->Draw(i, row, olc::DARK_GREEN) : pge->Draw(i, row, olc::VERY_DARK_GREEN);
     }
 }
 
@@ -29,22 +28,23 @@ bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int ru
     return (rule >> ruleIndex) & 1;
 }
 
-void Automaton::GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule)
+void Automaton::GenerateNextGeneration(std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule)
 {
-    for (int i = 0; i < SCREEN_WIDTH; ++i)
+    for (int i = 0; i < width; ++i)
     {
-        bool left = currentGeneration[(i + (SCREEN_WIDTH - 1)) % SCREEN_WIDTH];
+        // wraps around the edges of the simulation
+        bool left = currentGeneration[(i + (width - 1)) % width];
         bool center = currentGeneration[i];
-        bool right = currentGeneration[(i + 1) % SCREEN_WIDTH];
+        bool right = currentGeneration[(i + 1) % width];
         bool nextState = GetNextState(left, center, right, rule);
 
-        nextGeneration.set(i, nextState);
+        nextGeneration.at(i) = nextState;
     }
 }
 
 void Automaton::ShowNewInitialState()
 {
-    pge->Clear(olc::BLACK);
+    Clear();
     DrawGeneration(currentGeneration, row);
 }
 
@@ -53,11 +53,11 @@ void Automaton::Run()
     if (run)
     {
         DrawGeneration(currentGeneration, row);
-        GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
+        GenerateNextGeneration(currentGeneration, nextGeneration, rule);
         currentGeneration = nextGeneration;
         row++;
         
-        if (row >= pge->ScreenHeight())
+        if (row >= unsigned int(pge->ScreenHeight()))
         {
             run = false;
         }
@@ -76,18 +76,18 @@ void Automaton::SetRule(unsigned int rule)
 
 void Automaton::SetSpecificStartingState(unsigned int index)
 {
-    currentGeneration = { false };
-    currentGeneration.set(index, true);
+    std::fill(currentGeneration.begin(), currentGeneration.end(), 0);
+    currentGeneration.at(index) = true;
     ShowNewInitialState();
 }
 
 void Automaton::SetRandomStartingState()
 {
-    srand(time(NULL));
+    srand(unsigned int(time(NULL)));
     
-	for (int i = 0; i < SCREEN_WIDTH; ++i)
+	for (int i = 0; i < width; ++i)
 	{
-		currentGeneration.set(i, rand() % 2);
+		currentGeneration.at(i) = rand() % 2;
 	}
 
     ShowNewInitialState();

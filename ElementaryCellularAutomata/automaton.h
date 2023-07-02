@@ -3,8 +3,6 @@
 #include "olcPixelGameEngine.h"
 #include <bitset>
 
-constexpr unsigned int SCREEN_WIDTH = 760;
-
 class Automaton
 {
 public:
@@ -16,17 +14,17 @@ public:
 	void Clear();
 	void ClearAndRun();
 	unsigned int GetRule();
-	bool run;
 	
 private:
 	bool GetNextState(bool left, bool center, bool right, unsigned int rule);
-	void DrawGeneration(const std::bitset<SCREEN_WIDTH>& generation, unsigned int row);
-	void GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule);
+	void DrawGeneration(std::vector<bool>& generation, unsigned int row);
+	void GenerateNextGeneration(std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule);
 	void ShowNewInitialState();
 	olc::PixelGameEngine* pge;
-	std::bitset<SCREEN_WIDTH> currentGeneration;
-	std::bitset<SCREEN_WIDTH> nextGeneration;
-	unsigned int numGenerations;
+	std::vector<bool> currentGeneration;
+	std::vector<bool> nextGeneration;
 	unsigned int row;
 	unsigned int rule;
+	int width;
+	bool run;
 };

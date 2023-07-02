@@ -26,7 +26,6 @@ public:
 	{
 		automaton->Run();
 		CaptureShortcuts();
-		
 		return true;
 	}
 
@@ -36,7 +35,14 @@ public:
 
 		return true;
 	}
-	
+
+	bool OnUserDestroy() override
+	{
+		delete automaton, console;
+
+		return true;
+	}
+
 private:
 	void CaptureShortcuts()
 	{
@@ -45,7 +51,7 @@ private:
 			ConsoleShow(olc::Key::TAB, true);
 		}
 
-		if (GetKey(olc::Key::CTRL).bPressed && !IsConsoleShowing())
+		if (GetKey(olc::Key::CTRL).bPressed)
 		{
 			automaton->ClearAndRun();
 		}
@@ -63,7 +69,7 @@ private:
 int main()
 {
 	Simulator sim;
-	if (sim.Construct(760, 380, 2, 2/*, false, true*/))
+	if (sim.Construct(760, 380, 2, 2, false, false, false))
 		sim.Start();
 
 	return 0;

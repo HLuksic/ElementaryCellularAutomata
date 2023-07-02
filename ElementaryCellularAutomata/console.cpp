@@ -10,12 +10,11 @@ void Console::PrintHelpText()
 {
 	std::cout << "Available commands:\n";
 	std::cout << "help         - Displays this message.\n";
-	std::cout << "run          - Runs the simulation.\n";
-	std::cout << "setrule      - Sets the automaton. [0, 255]\n";
+	std::cout << "run          - Runs the simulation (shortcut CTRL).\n";
+	std::cout << "setrule      - Sets the automaton [0, 255].\n";
 	std::cout << "getrule      - Prints the current automaton.\n";
-	std::cout << "setstate     - Sets the initial generation state. (left, right, center, random)\n";
-	std::cout << "reset        - Resets the simulation.\n";
-	std::cout << "clear        - Clear screen.\n";
+	std::cout << "setstate     - Sets the initial generation state (left, right, center, random).\n";
+	std::cout << "clear        - Clear screen (shortcut C).\n";
 	std::cout << "clearconsole - Clear console history.\n" << std::endl;
 }
 
@@ -27,11 +26,11 @@ void Console::SetAutomatonState(const std::string& state)
 	}
 	else if (state == "right")
 	{
-		automaton->SetSpecificStartingState(SCREEN_WIDTH - 1);
+		automaton->SetSpecificStartingState(760 - 1);
 	}
 	else if (state == "center")
 	{
-		automaton->SetSpecificStartingState(SCREEN_WIDTH / 2);
+		automaton->SetSpecificStartingState(760 / 2);
 	}
 	else if (state == "random")
 	{
@@ -40,10 +39,7 @@ void Console::SetAutomatonState(const std::string& state)
 	else
 	{
 		std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n" << std::endl;
-		return;
 	}
-
-	automaton->Clear();
 }
 
 void Console::SetAutomatonRule(const std::string& argument)
