@@ -1,45 +1,41 @@
 #include "automaton.h"
 #include <random>
 
-struct Automaton::Private
+bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int rule) 
 {
-    static bool GetNextState(bool left, bool center, bool right, unsigned int rule) 
-    {
-        unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
-        return (rule >> ruleIndex) & 1;
-    }
+    unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
+    return (rule >> ruleIndex) & 1;
+}
 
-    static void DrawGeneration(Automaton* self, const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
+void Automaton::DrawGeneration(Automaton* self, const std::bitset<SCREEN_WIDTH>& generation, unsigned int row)
+{
+    for (int i = 0; i < SCREEN_WIDTH; ++i)
     {
-        for (int i = 0; i < SCREEN_WIDTH; ++i)
+        if (generation.test(i)) 
         {
-            if (generation.test(i)) 
-            {
-                self->pge->Draw(i, row, olc::DARK_GREY);
-            }
+            self->pge->Draw(i, row, olc::DARK_GREY);
         }
     }
+}
 
-    static void GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule)
+void Automaton::GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule)
+{
+    for (int i = 0; i < SCREEN_WIDTH; ++i)
     {
-        for (int i = 0; i < SCREEN_WIDTH; ++i)
-        {
-            bool left = currentGeneration[(i + (SCREEN_WIDTH - 1)) % SCREEN_WIDTH];
-            bool center = currentGeneration[i];
-            bool right = currentGeneration[(i + 1) % SCREEN_WIDTH];
+        bool left = currentGeneration[(i + (SCREEN_WIDTH - 1)) % SCREEN_WIDTH];
+        bool center = currentGeneration[i];
+        bool right = currentGeneration[(i + 1) % SCREEN_WIDTH];
+        bool nextState = GetNextState(left, center, right, rule);
 
-            bool nextState = GetNextState(left, center, right, rule);
-
-            nextGeneration.set(i, nextState);
-        }
+        nextGeneration.set(i, nextState);
     }
+}
 
-    static void ShowNewInitialState(Automaton* self)
-    {
-        self->pge->Clear(olc::BLACK);
-        DrawGeneration(self, self->currentGeneration, self->row);
-    }
-};
+void Automaton::ShowNewInitialState(Automaton* self)
+{
+    self->pge->Clear(olc::BLACK);
+    DrawGeneration(self, self->currentGeneration, self->row);
+}
 
 Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 {
@@ -49,15 +45,15 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
     row = 0;
     rule = 30;
     run = false;
-    Private::DrawGeneration(this, currentGeneration, row);
+    DrawGeneration(this, currentGeneration, row);
 }
 
 void Automaton::Run()
 {
     if (run)
     {
-        Private::DrawGeneration(this, currentGeneration, row);
-        Private::GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
+        DrawGeneration(this, currentGeneration, row);
+        GenerateNextGeneration(currentGeneration, nextGeneration, numGenerations, rule);
         currentGeneration = nextGeneration;
         row++;
         
@@ -77,7 +73,7 @@ void Automaton::SetSpecificStartingState(unsigned int index)
 {
     currentGeneration = { false };
     currentGeneration.set(index, true);
-    Private::ShowNewInitialState(this);
+    ShowNewInitialState(this);
 }
 
 void Automaton::SetRandomStartingState()
@@ -89,14 +85,20 @@ void Automaton::SetRandomStartingState()
 		currentGeneration.set(i, rand() % 2);
 	}
 
-    Private::ShowNewInitialState(this);
+    ShowNewInitialState(this);
 }
 
-void Automaton::Reset()
+void Automaton::Clear()
 {
     pge->Clear(olc::BLACK);
     row = 0;
-    Private::DrawGeneration(this, currentGeneration, row);
+    DrawGeneration(this, currentGeneration, row);
+}
+
+void Automaton::ClearAndRun()
+{
+    run = true;
+    Clear();
 }
 
 unsigned int Automaton::GetRule()

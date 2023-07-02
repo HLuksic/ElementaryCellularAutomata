@@ -13,6 +13,5 @@ private:
 	void PrintHelpText();
 	void SetAutomatonState(const std::string& state);
 	void SetAutomatonRule(const std::string& argument);
-	olc::PixelGameEngine* pge;
 	Automaton* automaton;
 };

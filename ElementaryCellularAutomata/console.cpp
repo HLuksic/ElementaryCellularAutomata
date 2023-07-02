@@ -4,13 +4,14 @@
 void Console::PrintHelpText()
 {
 	std::cout << "Available commands:\n";
-	std::cout << "help     - Displays this message.\n";
-	std::cout << "run      - Runs the simulation.\n";
-	std::cout << "setrule  - Sets the automaton. [0, 255]\n";
-	std::cout << "getrule  - Prints the current automaton.\n";
-	std::cout << "setstate - Sets the initial generation state. (left, right, center, random)\n";
-	std::cout << "reset    - Resets the simulation.\n";
-	std::cout << "clear    - Clear console history.\n" << std::endl;
+	std::cout << "help		   - Displays this message.\n";
+	std::cout << "run		   - Runs the simulation.\n";
+	std::cout << "setrule	   - Sets the automaton. [0, 255]\n";
+	std::cout << "getrule	   - Prints the current automaton.\n";
+	std::cout << "setstate	   - Sets the initial generation state. (left, right, center, random)\n";
+	std::cout << "reset        - Resets the simulation.\n";
+	std::cout << "clear        - Clear screen.\n" << std::endl;
+	std::cout << "clearconsole - Clear console history.\n" << std::endl;
 }
 
 void Console::SetAutomatonState(const std::string& state)
@@ -66,8 +67,7 @@ void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 	}
 	else if (command == "run")
 	{
-		automaton->run = true;
-		automaton->Reset();
+		automaton->ClearAndRun();
 	}
 	else if (command == "getrule")
 	{
@@ -75,18 +75,18 @@ void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 	}
 	else if (command == "setstate")
 	{
-		automaton->Reset();
+		automaton->Clear();
 		SetAutomatonState(argument);
 	}
 	else if (command == "setrule")
 	{
 		SetAutomatonRule(argument);
 	}
-	else if (command == "reset")
-	{
-		automaton->Reset();
-	}
 	else if (command == "clear")
+	{
+		automaton->Clear();
+	}
+	else if (command == "clearconsole")
 	{
 		pge->ConsoleClear();
 	}

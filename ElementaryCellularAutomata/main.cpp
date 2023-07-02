@@ -33,8 +33,7 @@ public:
 
 		if (GetKey(olc::Key::CTRL).bPressed)
 		{
-			automaton->run = true;
-			automaton->Reset();
+			automaton->ClearAndRun();
 		}
 		
 		return true;

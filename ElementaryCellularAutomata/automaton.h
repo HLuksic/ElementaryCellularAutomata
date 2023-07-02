@@ -13,12 +13,16 @@ public:
 	void SetRule(unsigned int rule);
 	void SetSpecificStartingState(unsigned int state);
 	void SetRandomStartingState();
-	void Reset();
+	void Clear();
+	void ClearAndRun();
 	unsigned int GetRule();
 	bool run;
 	
 private:
-	struct Private;
+	bool GetNextState(bool left, bool center, bool right, unsigned int rule);
+	void DrawGeneration(Automaton* self, const std::bitset<SCREEN_WIDTH>& generation, unsigned int row);
+	void GenerateNextGeneration(std::bitset<SCREEN_WIDTH>& currentGeneration, std::bitset<SCREEN_WIDTH>& nextGeneration, unsigned int numGenerations, unsigned int rule);
+	void ShowNewInitialState(Automaton* self);
 	olc::PixelGameEngine* pge;
 	std::bitset<SCREEN_WIDTH> currentGeneration;
 	std::bitset<SCREEN_WIDTH> nextGeneration;
