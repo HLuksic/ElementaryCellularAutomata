@@ -18,6 +18,7 @@ public:
 		automaton = new Automaton(this, ScreenHeight());
 		console = new Console(automaton);
 		ConsoleCaptureStdOut(true);
+		Clear(olc::VERY_DARK_GREY);
 
 		return true;
 	}
@@ -32,14 +33,12 @@ public:
 	bool OnConsoleCommand(const std::string& text) override
 	{
 		console->ParseCommand(this, text);
-
 		return true;
 	}
 
 	bool OnUserDestroy() override
 	{
 		delete automaton, console;
-
 		return true;
 	}
 

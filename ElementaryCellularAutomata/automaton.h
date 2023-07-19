@@ -14,6 +14,7 @@ public:
 	void Clear();
 	void ClearAndRun();
 	unsigned int GetRule();
+	unsigned int GetWidth();
 	
 private:
 	bool GetNextState(bool left, bool center, bool right, unsigned int rule);

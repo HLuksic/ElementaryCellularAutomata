@@ -62,6 +62,11 @@ unsigned int Automaton::GetRule()
     return rule;
 }
 
+unsigned int Automaton::GetWidth()
+{
+    return width;
+}
+
 void Automaton::SetRule(unsigned int rule)
 {
     this->rule = rule;

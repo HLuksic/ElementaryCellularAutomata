@@ -26,11 +26,11 @@ void Console::SetAutomatonState(const std::string& state)
 	}
 	else if (state == "right")
 	{
-		automaton->SetSpecificStartingState(760 - 1);
+		automaton->SetSpecificStartingState(automaton->GetWidth() - 1);
 	}
 	else if (state == "center")
 	{
-		automaton->SetSpecificStartingState(760 / 2);
+		automaton->SetSpecificStartingState(automaton->GetWidth() / 2);
 	}
 	else if (state == "random")
 	{
