@@ -19,7 +19,6 @@ private:
 	bool GetNextState(bool left, bool center, bool right, unsigned int rule);
 	void DrawGeneration(std::vector<bool>& generation, unsigned int row);
 	void GenerateNextGeneration(std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule);
-	void ShowNewInitialState();
 	olc::PixelGameEngine* pge;
 	std::vector<bool> currentGeneration;
 	std::vector<bool> nextGeneration;

@@ -42,12 +42,6 @@ void Automaton::GenerateNextGeneration(std::vector<bool>& currentGeneration, std
     }
 }
 
-void Automaton::ShowNewInitialState()
-{
-    Clear();
-    DrawGeneration(currentGeneration, row);
-}
-
 void Automaton::Run()
 {
     if (run)
@@ -78,7 +72,7 @@ void Automaton::SetSpecificStartingState(unsigned int index)
 {
     std::fill(currentGeneration.begin(), currentGeneration.end(), 0);
     currentGeneration.at(index) = true;
-    ShowNewInitialState();
+    Clear();
 }
 
 void Automaton::SetRandomStartingState()
@@ -90,7 +84,7 @@ void Automaton::SetRandomStartingState()
 		currentGeneration.at(i) = rand() % 2;
 	}
 
-    ShowNewInitialState();
+    Clear();
 }
 
 void Automaton::Clear()
