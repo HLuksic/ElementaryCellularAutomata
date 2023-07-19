@@ -55,6 +55,11 @@ void Console::SetAutomatonRule(const std::string& argument)
 	automaton->SetRule(rule);
 }
 
+bool Console::NoArguments(const std::string& command, const std::string& argument)
+{
+	return command == argument;
+}
+
 std::string Console::Trim(const std::string& text)
 {
 	std::string leftTrimmed = text.substr(text.find_first_not_of(" "));
@@ -69,37 +74,46 @@ void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 	// last space + 1 until end
 	std::string argument = trimmedText.substr(trimmedText.find_last_of(" ") + 1);
 
-	// command == argument means there is no arguments
-	if (command == "help" && command == argument)
+	if (NoArguments(command, argument))
 	{
-		PrintHelpText();
-	}
-	else if (command == "run" && command == argument)
-	{
-		automaton->ClearAndRun();
-	}
-	else if (command == "getrule" && command == argument)
-	{
-		std::cout << "Current rule: " << automaton->GetRule() << "\n" << std::endl;
-	}
-	else if (command == "clear" && command == argument)
-	{
-		automaton->Clear();
-	}
-	else if (command == "clearconsole" && command == argument)
-	{
-		pge->ConsoleClear();
-	}
-	else if (command == "setstate")
-	{
-		SetAutomatonState(argument);
-	}
-	else if (command == "setrule")
-	{
-		SetAutomatonRule(argument);
+		if (command == "help")
+		{
+			PrintHelpText();
+		}
+		else if (command == "run")
+		{
+			automaton->ClearAndRun();
+		}
+		else if (command == "getrule")
+		{
+			std::cout << "Current rule: " << automaton->GetRule() << "\n" << std::endl;
+		}
+		else if (command == "clear")
+		{
+			automaton->Clear();
+		}
+		else if (command == "clearconsole")
+		{
+			pge->ConsoleClear();
+		}
+		else
+		{
+			std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
+		}
 	}
 	else
 	{
-		std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
+		if (command == "setstate")
+		{
+			SetAutomatonState(argument);
+		}
+		else if (command == "setrule")
+		{
+			SetAutomatonRule(argument);
+		}
+		else
+		{
+			std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
+		}
 	}
 }

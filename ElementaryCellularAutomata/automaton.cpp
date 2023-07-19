@@ -18,7 +18,7 @@ void Automaton::DrawGeneration(std::vector<bool>& generation, unsigned int row)
 {
     for (int i = 0; i < width; ++i)
     {
-        generation.at(i) ? pge->Draw(i, row, olc::DARK_GREEN) : pge->Draw(i, row, olc::VERY_DARK_GREEN);
+        generation.at(i) ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
     }
 }
 
@@ -36,9 +36,8 @@ void Automaton::GenerateNextGeneration(std::vector<bool>& currentGeneration, std
         bool left = currentGeneration[(i + (width - 1)) % width];
         bool center = currentGeneration[i];
         bool right = currentGeneration[(i + 1) % width];
-        bool nextState = GetNextState(left, center, right, rule);
-
-        nextGeneration.at(i) = nextState;
+        
+        nextGeneration.at(i) = GetNextState(left, center, right, rule);
     }
 }
 
@@ -89,7 +88,7 @@ void Automaton::SetRandomStartingState()
 
 void Automaton::Clear()
 {
-    pge->Clear(olc::BLACK);
+    pge->Clear(olc::VERY_DARK_GREY);
     row = 0;
     run = false;
     DrawGeneration(currentGeneration, row);
