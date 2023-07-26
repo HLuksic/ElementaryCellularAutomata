@@ -46,17 +46,13 @@ private:
 	void CaptureShortcuts()
 	{
 		if (GetKey(olc::Key::TAB).bPressed)
-		{
 			ConsoleShow(olc::Key::TAB, true);
-		}
+		
 		if (GetKey(olc::Key::CTRL).bPressed)
-		{
 			automaton->ClearAndRun();
-		}
+		
 		if (GetKey(olc::Key::C).bPressed && !IsConsoleShowing())
-		{
 			automaton->Clear();
-		}
 	}
 
 	Console* console;
@@ -66,10 +62,8 @@ private:
 int main()
 {
 	Simulator sim;
-	if (sim.Construct(760, 380, 2, 2, false, false, false))
-	{
+	if (sim.Construct(500, 250, 3, 3, /*300, 150, 5, 5,*/ false, false, false))
 		sim.Start();
-	}
 
 	return 0;
 }

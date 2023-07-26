@@ -17,9 +17,7 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 void Automaton::DrawGeneration(const std::vector<bool>& generation, unsigned int row)
 {
     for (int i = 0; i < width; ++i)
-    {
         generation[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
-    }
 }
 
 bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int rule)
@@ -50,10 +48,8 @@ void Automaton::Run()
         currentGeneration = nextGeneration;
         row++;
         
-        if (row >= unsigned int(pge->ScreenHeight()))
-        {
+        if (row == pge->ScreenHeight())
             run = false;
-        }
     }
 }
 
@@ -83,10 +79,8 @@ void Automaton::SetRandomStartingState()
 {
     srand(unsigned int(time(NULL)));
     
-	for (int i = 0; i < width; ++i)
-	{
-		currentGeneration[i] = rand() % 2;
-	}
+	for (auto cell : currentGeneration)
+		cell = rand() % 2;
 
     Clear();
 }
@@ -94,9 +88,9 @@ void Automaton::SetRandomStartingState()
 void Automaton::Clear()
 {
     pge->Clear(olc::VERY_DARK_GREY);
+    DrawGeneration(currentGeneration, row);
     row = 0;
     run = false;
-    DrawGeneration(currentGeneration, row);
 }
 
 void Automaton::ClearAndRun()

@@ -21,25 +21,15 @@ void Console::PrintHelpText()
 void Console::SetAutomatonState(const std::string& state)
 {
 	if (state == "left")
-	{
 		automaton->SetSpecificStartingState(0);
-	}
 	else if (state == "right")
-	{
 		automaton->SetSpecificStartingState(automaton->GetWidth() - 1);
-	}
 	else if (state == "center")
-	{
 		automaton->SetSpecificStartingState(automaton->GetWidth() / 2);
-	}
 	else if (state == "random")
-	{
 		automaton->SetRandomStartingState();
-	}
 	else
-	{
 		std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n" << std::endl;
-	}
 }
 
 void Console::SetAutomatonRule(const std::string& argument)
@@ -60,6 +50,11 @@ bool Console::NoArguments(const std::string& command, const std::string& argumen
 	return command == argument;
 }
 
+bool Console::IsEmptyOrWhitespace(const std::string& text)
+{
+	return text.empty() || std::all_of(text.begin(), text.end(), isspace);
+}
+
 std::string Console::Trim(const std::string& text)
 {
 	std::string leftTrimmed = text.substr(text.find_first_not_of(" "));
@@ -68,6 +63,12 @@ std::string Console::Trim(const std::string& text)
 
 void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 {
+	if (IsEmptyOrWhitespace(text))
+	{
+		pge->ConsoleClear();
+		return;
+	}
+	
 	std::string trimmedText = Trim(text);
 	// first letter until space
 	std::string command = trimmedText.substr(0, trimmedText.find(" "));
@@ -77,43 +78,25 @@ void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 	if (NoArguments(command, argument))
 	{
 		if (command == "help")
-		{
 			PrintHelpText();
-		}
 		else if (command == "run")
-		{
 			automaton->ClearAndRun();
-		}
 		else if (command == "getrule")
-		{
 			std::cout << "Current rule: " << automaton->GetRule() << "\n" << std::endl;
-		}
 		else if (command == "clear")
-		{
 			automaton->Clear();
-		}
 		else if (command == "clearconsole")
-		{
 			pge->ConsoleClear();
-		}
 		else
-		{
 			std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
-		}
 	}
 	else
 	{
 		if (command == "setstate")
-		{
 			SetAutomatonState(argument);
-		}
 		else if (command == "setrule")
-		{
 			SetAutomatonRule(argument);
-		}
 		else
-		{
 			std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
-		}
 	}
 }
