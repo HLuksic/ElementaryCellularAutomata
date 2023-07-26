@@ -6,17 +6,6 @@ Console::Console(Automaton* automaton)
 	this->automaton = automaton;
 }
 
-void Console::PrintHelpText()
-{
-	std::cout << "Available commands:\n";
-	std::cout << "help         - Displays this message.\n";
-	std::cout << "run          - Runs the simulation (shortcut CTRL).\n";
-	std::cout << "setrule      - Sets the automaton [0, 255].\n";
-	std::cout << "getrule      - Prints the current automaton.\n";
-	std::cout << "setstate     - Sets the initial generation state (left, right, center, random).\n";
-	std::cout << "clear        - Clear screen (shortcut C).\n";
-	std::cout << "clearconsole - Clear console history.\n" << std::endl;
-}
 
 void Console::SetAutomatonState(const std::string& state)
 {
@@ -45,21 +34,28 @@ void Console::SetAutomatonRule(const std::string& argument)
 	automaton->SetRule(rule);
 }
 
-bool Console::NoArguments(const std::string& command, const std::string& argument)
+auto PrintHelpText = []()
 {
-	return command == argument;
-}
+	std::cout << "Available commands:\n";
+	std::cout << "help         - Displays this message.\n";
+	std::cout << "run          - Runs the simulation (shortcut CTRL).\n";
+	std::cout << "setrule      - Sets the automaton [0, 255].\n";
+	std::cout << "getrule      - Prints the current automaton.\n";
+	std::cout << "setstate     - Sets the initial generation state (left, right, center, random).\n";
+	std::cout << "clear        - Clear screen (shortcut C).\n";
+	std::cout << "clearconsole - Clear console history.\n" << std::endl;
+};
 
-bool Console::IsEmptyOrWhitespace(const std::string& text)
+auto IsEmptyOrWhitespace = [](const std::string& text) -> bool
 {
 	return text.empty() || std::all_of(text.begin(), text.end(), isspace);
-}
+};
 
-std::string Console::Trim(const std::string& text)
+auto Trim = [](const std::string& text) -> std::string
 {
 	std::string leftTrimmed = text.substr(text.find_first_not_of(" "));
 	return leftTrimmed.substr(0, leftTrimmed.find_last_not_of(" ") + 1);
-}
+};
 
 void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 {
@@ -70,33 +66,24 @@ void Console::ParseCommand(olc::PixelGameEngine* pge, const std::string& text)
 	}
 	
 	std::string trimmedText = Trim(text);
-	// first letter until space
 	std::string command = trimmedText.substr(0, trimmedText.find(" "));
-	// last space + 1 until end
-	std::string argument = trimmedText.substr(trimmedText.find_last_of(" ") + 1);
+	std::string argument = Trim(trimmedText.substr(trimmedText.find_first_of(" ")));
+	bool NoArguments = command == argument;
 
-	if (NoArguments(command, argument))
-	{
-		if (command == "help")
-			PrintHelpText();
-		else if (command == "run")
-			automaton->ClearAndRun();
-		else if (command == "getrule")
-			std::cout << "Current rule: " << automaton->GetRule() << "\n" << std::endl;
-		else if (command == "clear")
-			automaton->Clear();
-		else if (command == "clearconsole")
-			pge->ConsoleClear();
-		else
-			std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
-	}
+	if (command == "help" && NoArguments)
+		PrintHelpText();
+	else if (command == "run" && NoArguments)
+		automaton->ClearAndRun();
+	else if (command == "getrule" && NoArguments)
+		std::cout << "Current rule: " << automaton->GetRule() << "\n" << std::endl;
+	else if (command == "clear" && NoArguments)
+		automaton->Clear();
+	else if (command == "clearconsole" && NoArguments)
+		pge->ConsoleClear();
+	else if (command == "setstate")
+		SetAutomatonState(argument);
+	else if (command == "setrule")
+		SetAutomatonRule(argument);
 	else
-	{
-		if (command == "setstate")
-			SetAutomatonState(argument);
-		else if (command == "setrule")
-			SetAutomatonRule(argument);
-		else
-			std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
-	}
+		std::cout << "Command not found: '" << trimmedText << "'. Type 'help' for a list of commands.\n" << std::endl;
 }

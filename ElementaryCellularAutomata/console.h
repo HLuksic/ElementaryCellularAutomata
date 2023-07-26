@@ -10,11 +10,7 @@ public:
 	void ParseCommand(olc::PixelGameEngine* pge, const std::string& text);
 
 private:
-	void PrintHelpText();
 	void SetAutomatonState(const std::string& state);
 	void SetAutomatonRule(const std::string& argument);
-	bool NoArguments(const std::string& command, const std::string& argument);
-	bool IsEmptyOrWhitespace(const std::string& text);
-	std::string Trim(const std::string& text);
 	Automaton* automaton;
 };
