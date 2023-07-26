@@ -1,7 +1,6 @@
 #pragma once
 
 #include "olcPixelGameEngine.h"
-#include <bitset>
 
 class Automaton
 {
@@ -18,8 +17,8 @@ public:
 	
 private:
 	bool GetNextState(bool left, bool center, bool right, unsigned int rule);
-	void DrawGeneration(std::vector<bool>& generation, unsigned int row);
-	void GenerateNextGeneration(std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule);
+	void DrawGeneration(const std::vector<bool>& generation, unsigned int row);
+	void GenerateNextGeneration(const std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule);
 	olc::PixelGameEngine* pge;
 	std::vector<bool> currentGeneration;
 	std::vector<bool> nextGeneration;

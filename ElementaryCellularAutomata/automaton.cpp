@@ -7,18 +7,18 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
     width = pge->ScreenWidth();
     currentGeneration.resize(width);
     nextGeneration.resize(width);
-    currentGeneration.at(width / 2) = true;
+    currentGeneration[width / 2] = true;
     row = 0;
     rule = 30;
     run = false;
     DrawGeneration(currentGeneration, row);
 }
 
-void Automaton::DrawGeneration(std::vector<bool>& generation, unsigned int row)
+void Automaton::DrawGeneration(const std::vector<bool>& generation, unsigned int row)
 {
     for (int i = 0; i < width; ++i)
     {
-        generation.at(i) ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
+        generation[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
     }
 }
 
@@ -28,16 +28,16 @@ bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int ru
     return (rule >> ruleIndex) & 1;
 }
 
-void Automaton::GenerateNextGeneration(std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule)
+void Automaton::GenerateNextGeneration(const std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule)
 {
     for (int i = 0; i < width; ++i)
     {
         // wraps around the edges of the simulation
         bool left = currentGeneration[(i + (width - 1)) % width];
-        bool center = currentGeneration[i];
         bool right = currentGeneration[(i + 1) % width];
+        bool center = currentGeneration[i];
         
-        nextGeneration.at(i) = GetNextState(left, center, right, rule);
+        nextGeneration[i] = GetNextState(left, center, right, rule);
     }
 }
 
@@ -75,7 +75,7 @@ void Automaton::SetRule(unsigned int rule)
 void Automaton::SetSpecificStartingState(unsigned int index)
 {
     std::fill(currentGeneration.begin(), currentGeneration.end(), 0);
-    currentGeneration.at(index) = true;
+    currentGeneration[index] = true;
     Clear();
 }
 
@@ -85,7 +85,7 @@ void Automaton::SetRandomStartingState()
     
 	for (int i = 0; i < width; ++i)
 	{
-		currentGeneration.at(i) = rand() % 2;
+		currentGeneration[i] = rand() % 2;
 	}
 
     Clear();

@@ -49,12 +49,10 @@ private:
 		{
 			ConsoleShow(olc::Key::TAB, true);
 		}
-
 		if (GetKey(olc::Key::CTRL).bPressed)
 		{
 			automaton->ClearAndRun();
 		}
-
 		if (GetKey(olc::Key::C).bPressed && !IsConsoleShowing())
 		{
 			automaton->Clear();
@@ -69,7 +67,9 @@ int main()
 {
 	Simulator sim;
 	if (sim.Construct(760, 380, 2, 2, false, false, false))
+	{
 		sim.Start();
+	}
 
 	return 0;
 }
