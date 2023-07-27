@@ -14,16 +14,18 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
     DrawCurrentGeneration();
 }
 
-void Automaton::DrawCurrentGeneration()
+void Automaton::Run()
 {
-    for (int i = 0; i < width; ++i)
-        currentGeneration[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
-}
+    if (run)
+    {
+        DrawCurrentGeneration();
+        GenerateNextGeneration();
+        currentGeneration = nextGeneration;
+        row++;
 
-bool Automaton::GetNextState(bool left, bool center, bool right)
-{
-    unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
-    return (rule >> ruleIndex) & 1;
+        if (row == pge->ScreenHeight())
+            run = false;
+    }
 }
 
 void Automaton::GenerateNextGeneration()
@@ -39,18 +41,16 @@ void Automaton::GenerateNextGeneration()
     }
 }
 
-void Automaton::Run()
+bool Automaton::GetNextState(bool left, bool center, bool right)
 {
-    if (run)
-    {
-        DrawCurrentGeneration();
-        GenerateNextGeneration();
-        currentGeneration = nextGeneration;
-        row++;
-        
-        if (row == pge->ScreenHeight())
-            run = false;
-    }
+    unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
+    return (rule >> ruleIndex) & 1;
+}
+
+void Automaton::DrawCurrentGeneration()
+{
+    for (int i = 0; i < width; ++i)
+        currentGeneration[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
 }
 
 unsigned int Automaton::GetRule()
