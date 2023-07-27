@@ -11,22 +11,22 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
     row = 0;
     rule = 30;
     run = false;
-    DrawGeneration(currentGeneration, row);
+    DrawCurrentGeneration();
 }
 
-void Automaton::DrawGeneration(const std::vector<bool>& generation, unsigned int row)
+void Automaton::DrawCurrentGeneration()
 {
     for (int i = 0; i < width; ++i)
-        generation[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
+        currentGeneration[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
 }
 
-bool Automaton::GetNextState(bool left, bool center, bool right, unsigned int rule)
+bool Automaton::GetNextState(bool left, bool center, bool right)
 {
     unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
     return (rule >> ruleIndex) & 1;
 }
 
-void Automaton::GenerateNextGeneration(const std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule)
+void Automaton::GenerateNextGeneration()
 {
     for (int i = 0; i < width; ++i)
     {
@@ -35,7 +35,7 @@ void Automaton::GenerateNextGeneration(const std::vector<bool>& currentGeneratio
         bool right = currentGeneration[(i + 1) % width];
         bool center = currentGeneration[i];
         
-        nextGeneration[i] = GetNextState(left, center, right, rule);
+        nextGeneration[i] = GetNextState(left, center, right);
     }
 }
 
@@ -43,8 +43,8 @@ void Automaton::Run()
 {
     if (run)
     {
-        DrawGeneration(currentGeneration, row);
-        GenerateNextGeneration(currentGeneration, nextGeneration, rule);
+        DrawCurrentGeneration();
+        GenerateNextGeneration();
         currentGeneration = nextGeneration;
         row++;
         
@@ -88,9 +88,9 @@ void Automaton::SetRandomStartingState()
 void Automaton::Clear()
 {
     pge->Clear(olc::VERY_DARK_GREY);
-    DrawGeneration(currentGeneration, row);
     row = 0;
     run = false;
+    DrawCurrentGeneration();
 }
 
 void Automaton::ClearAndRun()

@@ -16,9 +16,9 @@ public:
 	unsigned int GetWidth();
 	
 private:
-	bool GetNextState(bool left, bool center, bool right, unsigned int rule);
-	void DrawGeneration(const std::vector<bool>& generation, unsigned int row);
-	void GenerateNextGeneration(const std::vector<bool>& currentGeneration, std::vector<bool>& nextGeneration, unsigned int rule);
+	bool GetNextState(bool left, bool center, bool right);
+	void DrawCurrentGeneration();
+	void GenerateNextGeneration();
 	olc::PixelGameEngine* pge;
 	std::vector<bool> currentGeneration;
 	std::vector<bool> nextGeneration;
