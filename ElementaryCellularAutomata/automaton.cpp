@@ -66,6 +66,7 @@ unsigned int Automaton::GetWidth()
 void Automaton::SetRule(unsigned int rule)
 {
     this->rule = rule;
+    std::cout << "Rule set to " << rule << ".\n\n";
 }
 
 void Automaton::SetSpecificStartingState(unsigned int index)
@@ -73,6 +74,7 @@ void Automaton::SetSpecificStartingState(unsigned int index)
     std::fill(currentGeneration.begin(), currentGeneration.end(), false);
     currentGeneration[index] = true;
     Clear();
+    std::cout << "Cell alive at index " << index << ".\n\n";
 }
 
 void Automaton::SetRandomStartingState()
@@ -83,6 +85,7 @@ void Automaton::SetRandomStartingState()
 		cell = rand() % 2;
 
     Clear();
+    std::cout << "State randomized.\n\n";
 }
 
 void Automaton::Clear()
