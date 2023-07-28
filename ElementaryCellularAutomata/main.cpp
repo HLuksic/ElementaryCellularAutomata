@@ -16,7 +16,7 @@ public:
 	bool OnUserCreate() override
 	{
 		automaton = new Automaton(this, ScreenHeight());
-		console = new Console(automaton);
+		console = new Console(this, automaton);
 		ConsoleCaptureStdOut(true);
 		Clear(olc::VERY_DARK_GREY);
 
@@ -32,7 +32,7 @@ public:
 
 	bool OnConsoleCommand(const std::string& text) override
 	{
-		console->ParseCommand(this, text);
+		console->ParseInput(text);
 		return true;
 	}
 
@@ -62,7 +62,7 @@ private:
 int main()
 {
 	Simulator sim;
-	if (sim.Construct(500, 250, 3, 3, /*300, 150, 5, 5,*/ false, false, false))
+	if (sim.Construct(500, 250, 3, 3 /*300, 150, 5, 5*/))
 		sim.Start();
 
 	return 0;

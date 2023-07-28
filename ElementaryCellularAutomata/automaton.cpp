@@ -1,9 +1,9 @@
 #include "automaton.h"
 #include <random>
 
-Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
+Automaton::Automaton(olc::PixelGameEngine* pge, unsigned int screenHeight)
 {
-    pge = engine;
+    this->pge = pge;
     width = pge->ScreenWidth();
     currentGeneration.resize(width);
     nextGeneration.resize(width);
@@ -16,16 +16,16 @@ Automaton::Automaton(olc::PixelGameEngine* engine, unsigned int screenHeight)
 
 void Automaton::Run()
 {
-    if (run)
-    {
-        DrawCurrentGeneration();
-        GenerateNextGeneration();
-        currentGeneration = nextGeneration;
-        row++;
+    if (!run)
+        return;
 
-        if (row == pge->ScreenHeight())
-            run = false;
-    }
+    DrawCurrentGeneration();
+    GenerateNextGeneration();
+    currentGeneration = nextGeneration;
+    row++;
+
+    if (row == pge->ScreenHeight())
+        run = false;
 }
 
 void Automaton::GenerateNextGeneration()
@@ -70,7 +70,7 @@ void Automaton::SetRule(unsigned int rule)
 
 void Automaton::SetSpecificStartingState(unsigned int index)
 {
-    std::fill(currentGeneration.begin(), currentGeneration.end(), 0);
+    std::fill(currentGeneration.begin(), currentGeneration.end(), false);
     currentGeneration[index] = true;
     Clear();
 }
