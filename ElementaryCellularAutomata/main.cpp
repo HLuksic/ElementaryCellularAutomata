@@ -59,11 +59,33 @@ private:
 	Automaton* automaton;
 };
 
-int main()
+void CheckArguments(int argc)
 {
+	if (argc != 4 && argc != 1)
+	{
+		std::cout << "Provide 0 or 3 arguments!\n";
+		exit(0);
+	}
+}
+
+auto GetArguments(int argc, char* argv[])
+{
+	if (argc == 4)
+		return std::array<int, 3>{ atoi(argv[1]), atoi(argv[2]), atoi(argv[3]) };
+
+	return std::array<int, 3>{ 500, 250, 3 };
+}
+
+int main(int argc, char* argv[])
+{
+	CheckArguments(argc);
+	auto args = GetArguments(argc, argv);
+	
 	Simulator sim;
-	if (sim.Construct(500, 250, 3, 3 /*300, 150, 5, 5*/))
+	if (sim.Construct(args[0], args[1], args[2], args[2]))
 		sim.Start();
+	else
+		std::cout << "Invalid arguments!\n";
 
 	return 0;
 }
