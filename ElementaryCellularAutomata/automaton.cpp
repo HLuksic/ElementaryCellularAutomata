@@ -1,7 +1,18 @@
 #include "automaton.h"
 #include <random>
 
-Automaton::Automaton(olc::PixelGameEngine* pge, unsigned int screenHeight)
+namespace States
+{
+    enum State
+    {
+	    CENTER = 0,
+	    LEFT = 1,
+	    RIGHT = 2,
+        RANDOM = 3
+    };
+}
+
+Automaton::Automaton(olc::PixelGameEngine* pge)
 {
     this->pge = pge;
     width = pge->ScreenWidth();
@@ -11,6 +22,7 @@ Automaton::Automaton(olc::PixelGameEngine* pge, unsigned int screenHeight)
     row = 0;
     rule = 30;
     run = false;
+    state = 0;
     DrawCurrentGeneration();
 }
 
@@ -69,11 +81,15 @@ void Automaton::SetRule(unsigned int rule)
     std::cout << "Rule set to " << rule << ".\n\n";
 }
 
+void Automaton::SetState(unsigned int state)
+{
+    this->state = state;
+}
+
 void Automaton::SetSpecificStartingState(unsigned int index)
 {
     std::fill(currentGeneration.begin(), currentGeneration.end(), false);
     currentGeneration[index] = true;
-    Clear();
     std::cout << "Cell alive at index " << index << ".\n\n";
 }
 
@@ -81,18 +97,41 @@ void Automaton::SetRandomStartingState()
 {
     srand(unsigned int(time(NULL)));
     
-	for (auto cell : currentGeneration)
-		cell = rand() % 2;
-
-    Clear();
+    for (auto cell : currentGeneration)
+        cell = rand() % 2;
+    
     std::cout << "State randomized.\n\n";
 }
 
-void Automaton::Clear()
+void Automaton::Reset()
 {
-    pge->Clear(olc::VERY_DARK_GREY);
-    row = 0;
+    Clear();
     run = false;
+
+    switch (state)
+    {
+    case States::CENTER:
+    {
+        SetSpecificStartingState(width / 2);
+        break;
+    }
+    case States::LEFT:
+    {
+        SetSpecificStartingState(0);
+        break;
+    }
+    case States::RIGHT:
+    {
+        SetSpecificStartingState(width - 1);
+        break;
+    }
+    case States::RANDOM:
+    {
+        SetRandomStartingState();
+        break;
+    }
+    }
+
     DrawCurrentGeneration();
 }
 
@@ -100,4 +139,10 @@ void Automaton::ClearAndRun()
 {
     Clear();
     run = true;
+}
+
+void Automaton::Clear()
+{
+    pge->Clear(olc::VERY_DARK_GREY);
+    row = 0;
 }

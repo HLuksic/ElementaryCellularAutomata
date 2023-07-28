@@ -26,8 +26,9 @@ static void PrintHelpText()
 	std::cout << "setrule      - Sets the automaton [0, 255].\n";
 	std::cout << "getrule      - Prints the current automaton.\n";
 	std::cout << "setstate     - Sets the initial generation state (left, right, center, random).\n";
-	std::cout << "clear        - Clear screen (shortcut C).\n";
-	std::cout << "clearconsole - Clear console history.\n\n";
+	std::cout << "reset        - Clear screen and reset state (shortcut R).\n";
+	std::cout << "clear        - Clear console history.\n\n";
+	std::cout << "Interesting rules: 30, 73, 90, 110, 184\n\n";
 }
 
 void Console::ParseInput(const std::string& text)
@@ -51,9 +52,9 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 		automaton->ClearAndRun();
 	else if (command == "getrule")
 		std::cout << "Current rule: " << automaton->GetRule() << "\n\n";
+	else if (command == "reset")
+		automaton->Reset();
 	else if (command == "clear")
-		automaton->Clear();
-	else if (command == "clearconsole")
 		pge->ConsoleClear();
 	else if (command == "setstate")
 		SetAutomatonState(argument);
@@ -66,16 +67,21 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 
 void Console::SetAutomatonState(const std::string& state)
 {
-	if (state == "left")
-		automaton->SetSpecificStartingState(0);
+	if (state == "center")
+		automaton->SetState(0);
+	else if (state == "left")
+		automaton->SetState(1);
 	else if (state == "right")
-		automaton->SetSpecificStartingState(automaton->GetWidth() - 1);
-	else if (state == "center")
-		automaton->SetSpecificStartingState(automaton->GetWidth() / 2);
+		automaton->SetState(2);
 	else if (state == "random")
-		automaton->SetRandomStartingState();
+		automaton->SetState(3);
 	else
+	{
 		std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n\n";
+		return;
+	}
+
+	automaton->Reset();
 }
 
 void Console::SetAutomatonRule(const std::string& argument)

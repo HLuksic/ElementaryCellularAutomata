@@ -15,7 +15,7 @@ public:
 
 	bool OnUserCreate() override
 	{
-		automaton = new Automaton(this, ScreenHeight());
+		automaton = new Automaton(this);
 		console = new Console(this, automaton);
 		ConsoleCaptureStdOut(true);
 		Clear(olc::VERY_DARK_GREY);
@@ -51,8 +51,8 @@ private:
 		if (GetKey(olc::Key::CTRL).bPressed)
 			automaton->ClearAndRun();
 		
-		if (GetKey(olc::Key::C).bPressed && !IsConsoleShowing())
-			automaton->Clear();
+		if (GetKey(olc::Key::R).bPressed && !IsConsoleShowing())
+			automaton->Reset();
 	}
 
 	Console* console;
