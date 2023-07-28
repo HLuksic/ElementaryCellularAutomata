@@ -21,23 +21,21 @@ Automaton::Automaton(olc::PixelGameEngine* pge)
     currentGeneration[width / 2] = true;
     row = 0;
     rule = 30;
-    run = false;
     state = 0;
     DrawCurrentGeneration();
 }
 
 void Automaton::Run()
 {
-    if (!run)
-        return;
-
-    DrawCurrentGeneration();
     GenerateNextGeneration();
     currentGeneration = nextGeneration;
-    row++;
 
-    if (row == pge->ScreenHeight())
-        run = false;
+    if (row < pge->ScreenHeight() - 1)
+        row++;
+    else
+        pge->DrawSprite(olc::vi2d(0, -1), pge->GetDrawTarget());
+
+    DrawCurrentGeneration();
 }
 
 void Automaton::GenerateNextGeneration()
@@ -45,10 +43,14 @@ void Automaton::GenerateNextGeneration()
     for (int i = 0; i < width; ++i)
     {
         // wraps around the edges of the simulation
-        bool left = currentGeneration[(i + (width - 1)) % width];
+        /*bool left = currentGeneration[(i + (width - 1)) % width];
         bool right = currentGeneration[(i + 1) % width];
-        bool center = currentGeneration[i];
+        bool center = currentGeneration[i];*/
         
+        bool left = !i ? false : currentGeneration[i - 1];
+        bool right = i == width - 1 ? false : currentGeneration[i + 1];
+        bool center = currentGeneration[i];
+
         nextGeneration[i] = GetNextState(left, center, right);
     }
 }
@@ -62,7 +64,7 @@ bool Automaton::GetNextState(bool left, bool center, bool right)
 void Automaton::DrawCurrentGeneration()
 {
     for (int i = 0; i < width; ++i)
-        currentGeneration[i] ? pge->Draw(i, row, olc::DARK_GREY) : pge->Draw(i, row, olc::VERY_DARK_GREY);
+        currentGeneration[i] ? pge->Draw(i, row, olc::VERY_DARK_GREY) : pge->Draw(i, row, olc::DARK_GREY);
 }
 
 unsigned int Automaton::GetRule()
@@ -106,7 +108,6 @@ void Automaton::SetRandomStartingState()
 void Automaton::Reset()
 {
     Clear();
-    run = false;
 
     switch (state)
     {
@@ -135,14 +136,8 @@ void Automaton::Reset()
     DrawCurrentGeneration();
 }
 
-void Automaton::ClearAndRun()
-{
-    Clear();
-    run = true;
-}
-
 void Automaton::Clear()
 {
-    pge->Clear(olc::VERY_DARK_GREY);
+    pge->Clear(olc::DARK_GREY);
     row = 0;
 }

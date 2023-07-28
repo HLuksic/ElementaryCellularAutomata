@@ -10,7 +10,6 @@ public:
 	void SetRule(unsigned int rule);
 	void SetState(unsigned int state);
 	void Reset();
-	void ClearAndRun();
 	unsigned int GetRule();
 	unsigned int GetWidth();
 	
@@ -28,5 +27,4 @@ private:
 	unsigned int row;
 	unsigned int rule;
 	int width;
-	bool run;
 };

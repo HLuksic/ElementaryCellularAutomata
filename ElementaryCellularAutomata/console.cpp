@@ -21,13 +21,15 @@ static auto Tokenize(const std::string& text)
 static void PrintHelpText()
 {
 	std::cout << "Available commands:\n";
-	std::cout << "help         - Displays this message.\n";
-	std::cout << "run          - Runs the simulation (shortcut CTRL).\n";
-	std::cout << "setrule      - Sets the automaton [0, 255].\n";
-	std::cout << "getrule      - Prints the current automaton.\n";
-	std::cout << "setstate     - Sets the initial generation state (left, right, center, random).\n";
-	std::cout << "reset        - Clear screen and reset state (shortcut R).\n";
-	std::cout << "clear        - Clear console history.\n\n";
+	std::cout << "help     - Displays this message.\n";
+	std::cout << "setrule  - Sets the automaton [0, 255].\n";
+	std::cout << "getrule  - Prints the current automaton.\n";
+	std::cout << "setstate - Sets the initial generation state (left, right, center, random).\n";
+	std::cout << "reset    - Clear screen and reset state.\n";
+	std::cout << "clear    - Clear console history.\n\n";
+	std::cout << "Available shortcuts:\n";
+	std::cout << "CTRL - Pause / unpause\n";
+	std::cout << "R    - Reset\n\n";
 	std::cout << "Interesting rules: 30, 73, 90, 110, 184\n\n";
 }
 
@@ -36,10 +38,7 @@ void Console::ParseInput(const std::string& text)
 	std::vector<std::string> tokens = Tokenize(text);
 
 	if (tokens.empty())
-	{
-		pge->ConsoleClear();
 		return;
-	}
 	
 	IdentifyCommand(tokens[0], tokens[1]);
 }
@@ -48,8 +47,6 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 {
 	if (command == "help")
 		PrintHelpText();
-	else if (command == "run")
-		automaton->ClearAndRun();
 	else if (command == "getrule")
 		std::cout << "Current rule: " << automaton->GetRule() << "\n\n";
 	else if (command == "reset")

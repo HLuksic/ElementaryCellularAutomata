@@ -17,15 +17,18 @@ public:
 	{
 		automaton = new Automaton(this);
 		console = new Console(this, automaton);
+		runAutomaton = false;
 		ConsoleCaptureStdOut(true);
-		Clear(olc::VERY_DARK_GREY);
+		Clear(olc::DARK_GREY);
 
 		return true;
 	}
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		automaton->Run();
+		if (runAutomaton)
+			automaton->Run();
+		
 		CaptureShortcuts();
 		return true;
 	}
@@ -49,7 +52,7 @@ private:
 			ConsoleShow(olc::Key::TAB, true);
 		
 		if (GetKey(olc::Key::CTRL).bPressed)
-			automaton->ClearAndRun();
+			runAutomaton = !runAutomaton;
 		
 		if (GetKey(olc::Key::R).bPressed && !IsConsoleShowing())
 			automaton->Reset();
@@ -57,6 +60,7 @@ private:
 
 	Console* console;
 	Automaton* automaton;
+	bool runAutomaton;
 };
 
 void CheckArguments(int argc)
@@ -82,7 +86,7 @@ int main(int argc, char* argv[])
 	auto args = GetArguments(argc, argv);
 	
 	Simulator sim;
-	if (sim.Construct(args[0], args[1], args[2], args[2]))
+	if (sim.Construct(args[0], args[1], args[2], args[2], false, true))
 		sim.Start();
 	else
 		std::cout << "Invalid arguments!\n";
