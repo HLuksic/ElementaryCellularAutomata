@@ -21,10 +21,10 @@ static auto Tokenize(const std::string& text)
 static void PrintHelpText()
 {
 	std::cout << "Available commands:\n";
-	std::cout << "help     - Displays this message.\n";
-	std::cout << "setrule  - Sets the automaton [0, 255].\n";
-	std::cout << "getrule  - Prints the current automaton.\n";
-	std::cout << "setstate - Sets the initial generation state (left, right, center, random).\n";
+	std::cout << "help     - Display this message.\n";
+	std::cout << "setrule  - Set the automaton [0, 255].\n";
+	std::cout << "getrule  - Print the current automaton.\n";
+	std::cout << "setstate - Set the initial generation state (left, right, center, random).\n";
 	std::cout << "reset    - Clear screen and reset state.\n";
 	std::cout << "clear    - Clear console history.\n\n";
 	std::cout << "Available shortcuts:\n";
@@ -35,7 +35,7 @@ static void PrintHelpText()
 
 void Console::ParseInput(const std::string& text)
 {
-	std::vector<std::string> tokens = Tokenize(text);
+	auto tokens = Tokenize(text);
 
 	if (tokens.empty())
 		return;
@@ -79,6 +79,7 @@ void Console::SetAutomatonState(const std::string& state)
 	}
 
 	automaton->Reset();
+	std::cout << "State set.\n\n";
 }
 
 void Console::SetAutomatonRule(const std::string& argument)

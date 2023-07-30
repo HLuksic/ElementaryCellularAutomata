@@ -19,6 +19,7 @@ public:
 		console = new Console(this, automaton);
 		runAutomaton = false;
 		ConsoleCaptureStdOut(true);
+		srand(unsigned int(time(NULL)));
 		Clear(olc::DARK_GREY);
 
 		return true;
@@ -89,7 +90,7 @@ int main(int argc, char* argv[])
 	if (sim.Construct(args[0], args[1], args[2], args[2], false, true))
 		sim.Start();
 	else
-		std::cout << "Invalid arguments!\n";
+		std::cout << "Invalid argument(s)!\n";
 
 	return 0;
 }

@@ -26,5 +26,5 @@ private:
 	unsigned int state;
 	unsigned int row;
 	unsigned int rule;
-	int width;
+	unsigned int width;
 };

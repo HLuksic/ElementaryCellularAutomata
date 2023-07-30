@@ -5,9 +5,9 @@ namespace States
 {
     enum State
     {
-	    CENTER = 0,
-	    LEFT = 1,
-	    RIGHT = 2,
+        CENTER = 0,
+        LEFT = 1,
+        RIGHT = 2,
         RANDOM = 3
     };
 }
@@ -30,9 +30,10 @@ void Automaton::Run()
     GenerateNextGeneration();
     currentGeneration = nextGeneration;
 
-    if (row < pge->ScreenHeight() - 1)
+    if (int(row) < pge->ScreenHeight() - 1)
         row++;
     else
+        // draw screen sprite one pixel higher, new row at the bottom
         pge->DrawSprite(olc::vi2d(0, -1), pge->GetDrawTarget());
 
     DrawCurrentGeneration();
@@ -40,13 +41,14 @@ void Automaton::Run()
 
 void Automaton::GenerateNextGeneration()
 {
-    for (int i = 0; i < width; ++i)
+    for (unsigned int i = 0; i < width; ++i)
     {
-        // wraps around the edges of the simulation
+        // wraps around the edges
         /*bool left = currentGeneration[(i + (width - 1)) % width];
         bool right = currentGeneration[(i + 1) % width];
         bool center = currentGeneration[i];*/
         
+        // edges considered false
         bool left = !i ? false : currentGeneration[i - 1];
         bool right = i == width - 1 ? false : currentGeneration[i + 1];
         bool center = currentGeneration[i];
@@ -63,7 +65,7 @@ bool Automaton::GetNextState(bool left, bool center, bool right)
 
 void Automaton::DrawCurrentGeneration()
 {
-    for (int i = 0; i < width; ++i)
+    for (unsigned int i = 0; i < width; ++i)
         currentGeneration[i] ? pge->Draw(i, row, olc::VERY_DARK_GREY) : pge->Draw(i, row, olc::DARK_GREY);
 }
 
@@ -92,17 +94,12 @@ void Automaton::SetSpecificStartingState(unsigned int index)
 {
     std::fill(currentGeneration.begin(), currentGeneration.end(), false);
     currentGeneration[index] = true;
-    std::cout << "Cell alive at index " << index << ".\n\n";
 }
 
 void Automaton::SetRandomStartingState()
 {
-    srand(unsigned int(time(NULL)));
-    
     for (auto cell : currentGeneration)
         cell = rand() % 2;
-    
-    std::cout << "State randomized.\n\n";
 }
 
 void Automaton::Reset()
