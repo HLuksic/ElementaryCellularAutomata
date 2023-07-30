@@ -2,6 +2,9 @@
 
 #include "olcPixelGameEngine.h"
 
+const olc::Pixel LIVE_COLOR = olc::VERY_DARK_GREY;
+const olc::Pixel DEAD_COLOR = olc::DARK_GREY;
+
 class Automaton
 {
 public:

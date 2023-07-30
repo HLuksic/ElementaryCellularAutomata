@@ -15,13 +15,12 @@ public:
 
 	bool OnUserCreate() override
 	{
+		Clear(DEAD_COLOR);
 		automaton = new Automaton(this);
 		console = new Console(this, automaton);
 		runAutomaton = false;
 		ConsoleCaptureStdOut(true);
 		srand(unsigned int(time(NULL)));
-		Clear(olc::DARK_GREY);
-
 		return true;
 	}
 
@@ -29,7 +28,6 @@ public:
 	{
 		if (runAutomaton)
 			automaton->Run();
-		
 		CaptureShortcuts();
 		return true;
 	}
@@ -75,18 +73,18 @@ void CheckArguments(int argc)
 
 auto GetArguments(int argc, char* argv[])
 {
+	std::array<int, 3> args = { 500, 250, 3 };
 	if (argc == 4)
-		return std::array<int, 3>{ atoi(argv[1]), atoi(argv[2]), atoi(argv[3]) };
-
-	return std::array<int, 3>{ 500, 250, 3 };
+		args = { atoi(argv[1]), atoi(argv[2]), atoi(argv[3]) };
+	return args;
 }
 
 int main(int argc, char* argv[])
 {
 	CheckArguments(argc);
 	auto args = GetArguments(argc, argv);
-	
 	Simulator sim;
+	
 	if (sim.Construct(args[0], args[1], args[2], args[2], false, true))
 		sim.Start();
 	else

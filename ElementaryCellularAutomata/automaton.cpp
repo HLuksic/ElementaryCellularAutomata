@@ -19,18 +19,18 @@ Automaton::Automaton(olc::PixelGameEngine* pge)
     currentGeneration.resize(width);
     nextGeneration.resize(width);
     currentGeneration[width / 2] = true;
+    DrawCurrentGeneration();
     row = 0;
     rule = 30;
     state = 0;
     wrap = false;
-    DrawCurrentGeneration();
 }
 
 void Automaton::Run()
 {
     GenerateNextGeneration();
     currentGeneration = nextGeneration;
-
+    
     if (int(row) < pge->ScreenHeight() - 1)
         row++;
     else
@@ -72,7 +72,7 @@ bool Automaton::GetNextState(bool left, bool center, bool right)
 void Automaton::DrawCurrentGeneration()
 {
     for (unsigned int i = 0; i < width; ++i)
-        currentGeneration[i] ? pge->Draw(i, row, olc::VERY_DARK_GREY) : pge->Draw(i, row, olc::DARK_GREY);
+        currentGeneration[i] ? pge->Draw(i, row, LIVE_COLOR) : pge->Draw(i, row, DEAD_COLOR);
 }
 
 unsigned int Automaton::GetRule()
@@ -115,7 +115,7 @@ void Automaton::SetRandomStartingState()
 
 void Automaton::Reset()
 {
-    pge->Clear(olc::DARK_GREY);
+    pge->Clear(DEAD_COLOR);
     row = 0;
     
     switch (state)
@@ -141,6 +141,5 @@ void Automaton::Reset()
         break;
     }
     }
-
     DrawCurrentGeneration();
 }

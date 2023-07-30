@@ -14,7 +14,6 @@ static auto Tokenize(const std::string& text)
 	std::copy(std::istream_iterator<std::string>(iss),
 			  std::istream_iterator<std::string>(), 
 			  std::back_inserter(tokens));
-	
 	return tokens;
 }
 
@@ -37,10 +36,8 @@ static void PrintHelpText()
 void Console::ParseInput(const std::string& text)
 {
 	auto tokens = Tokenize(text);
-
 	if (tokens.empty())
 		return;
-	
 	IdentifyCommand(tokens[0], tokens[1]);
 }
 
@@ -79,7 +76,6 @@ void Console::SetAutomatonState(const std::string& state)
 		std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n\n";
 		return;
 	}
-
 	automaton->Reset();
 	std::cout << "State set.\n\n";
 }
@@ -87,7 +83,6 @@ void Console::SetAutomatonState(const std::string& state)
 void Console::SetAutomatonRule(const std::string& argument)
 {
 	int rule = 0;
-
 	try
 	{
 		rule = std::stoi(argument);
@@ -97,13 +92,11 @@ void Console::SetAutomatonRule(const std::string& argument)
 		std::cout << "Invalid rule: '" << argument << "'. Value must be in range [0, 255].\n\n";
 		return;
 	}
-	
 	if (rule < 0 || rule > 255)
 	{
 		std::cout << "Invalid rule: '" << argument << "'. Value must be in range [0, 255].\n\n";
 		return;
 	}
-
 	automaton->SetRule(rule);
 	std::cout << "Rule set to " << rule << ".\n\n";
 }
