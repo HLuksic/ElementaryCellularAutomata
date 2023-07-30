@@ -9,6 +9,7 @@ public:
 	void Run();
 	void SetRule(unsigned int rule);
 	void SetState(unsigned int state);
+	void ToggleWrap();
 	void Reset();
 	unsigned int GetRule();
 	unsigned int GetWidth();
@@ -19,7 +20,6 @@ private:
 	void SetRandomStartingState();
 	void DrawCurrentGeneration();
 	void GenerateNextGeneration();
-	void Clear();
 	olc::PixelGameEngine* pge;
 	std::vector<bool> currentGeneration;
 	std::vector<bool> nextGeneration;
@@ -27,4 +27,5 @@ private:
 	unsigned int row;
 	unsigned int rule;
 	unsigned int width;
+	bool wrap;
 };

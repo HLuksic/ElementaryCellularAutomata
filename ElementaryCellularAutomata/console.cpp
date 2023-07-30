@@ -27,6 +27,7 @@ static void PrintHelpText()
 	std::cout << "setstate - Set the initial generation state (left, right, center, random).\n";
 	std::cout << "reset    - Clear screen and reset state.\n";
 	std::cout << "clear    - Clear console history.\n\n";
+	std::cout << "wrap     - Enable / disable wrapping\n\n";
 	std::cout << "Available shortcuts:\n";
 	std::cout << "CTRL - Pause / unpause\n";
 	std::cout << "R    - Reset\n\n";
@@ -57,9 +58,10 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 		SetAutomatonState(argument);
 	else if (command == "setrule")
 		SetAutomatonRule(argument);
+	else if (command == "wrap")
+		automaton->ToggleWrap();
 	else
-		std::cout << "Invalid command: '" << command + " " + argument 
-				  << "'. Type 'help' for a list of commands.\n\n";
+		std::cout << "Invalid command: '" << command << "'. Type 'help' for a list of commands.\n\n";
 }
 
 void Console::SetAutomatonState(const std::string& state)
@@ -103,4 +105,5 @@ void Console::SetAutomatonRule(const std::string& argument)
 	}
 
 	automaton->SetRule(rule);
+	std::cout << "Rule set to " << rule << ".\n\n";
 }

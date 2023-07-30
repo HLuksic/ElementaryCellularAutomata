@@ -22,6 +22,7 @@ Automaton::Automaton(olc::PixelGameEngine* pge)
     row = 0;
     rule = 30;
     state = 0;
+    wrap = false;
     DrawCurrentGeneration();
 }
 
@@ -43,15 +44,20 @@ void Automaton::GenerateNextGeneration()
 {
     for (unsigned int i = 0; i < width; ++i)
     {
-        // wraps around the edges
-        /*bool left = currentGeneration[(i + (width - 1)) % width];
-        bool right = currentGeneration[(i + 1) % width];
-        bool center = currentGeneration[i];*/
-        
-        // edges considered false
-        bool left = !i ? false : currentGeneration[i - 1];
-        bool right = i == width - 1 ? false : currentGeneration[i + 1];
-        bool center = currentGeneration[i];
+        bool left, right, center;
+
+        if (wrap)
+        {
+			left = currentGeneration[(i + (width - 1)) % width];
+			right = currentGeneration[(i + 1) % width];
+			center = currentGeneration[i];
+		}
+        else
+        {
+			left = !i ? false : currentGeneration[i - 1];
+			right = i == width - 1 ? false : currentGeneration[i + 1];
+			center = currentGeneration[i];
+		}
 
         nextGeneration[i] = GetNextState(left, center, right);
     }
@@ -82,12 +88,17 @@ unsigned int Automaton::GetWidth()
 void Automaton::SetRule(unsigned int rule)
 {
     this->rule = rule;
-    std::cout << "Rule set to " << rule << ".\n\n";
 }
 
 void Automaton::SetState(unsigned int state)
 {
     this->state = state;
+}
+
+void Automaton::ToggleWrap()
+{
+    wrap = !wrap;
+    wrap ? std::cout << "Wrapping enabled\n\n" : std::cout << "Wrapping disabled\n\n";
 }
 
 void Automaton::SetSpecificStartingState(unsigned int index)
@@ -104,8 +115,9 @@ void Automaton::SetRandomStartingState()
 
 void Automaton::Reset()
 {
-    Clear();
-
+    pge->Clear(olc::DARK_GREY);
+    row = 0;
+    
     switch (state)
     {
     case States::CENTER:
@@ -131,10 +143,4 @@ void Automaton::Reset()
     }
 
     DrawCurrentGeneration();
-}
-
-void Automaton::Clear()
-{
-    pge->Clear(olc::DARK_GREY);
-    row = 0;
 }
