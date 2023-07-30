@@ -12,8 +12,8 @@ static auto Tokenize(const std::string& text)
 	std::vector<std::string> tokens;
 	std::istringstream iss(text);
 	std::copy(std::istream_iterator<std::string>(iss),
-			  std::istream_iterator<std::string>(), 
-			  std::back_inserter(tokens));
+              std::istream_iterator<std::string>(), 
+              std::back_inserter(tokens));
 	return tokens;
 }
 
@@ -25,7 +25,7 @@ static void PrintHelpText()
 	std::cout << "getrule  - Print the current automaton.\n";
 	std::cout << "setstate - Set the initial generation state (left, right, center, random).\n";
 	std::cout << "reset    - Clear screen and reset state.\n";
-	std::cout << "clear    - Clear console history.\n\n";
+	std::cout << "clear    - Clear console history.\n";
 	std::cout << "wrap     - Enable / disable wrapping\n\n";
 	std::cout << "Available shortcuts:\n";
 	std::cout << "CTRL - Pause / unpause\n";
@@ -92,6 +92,7 @@ void Console::SetAutomatonRule(const std::string& argument)
 		std::cout << "Invalid rule: '" << argument << "'. Value must be in range [0, 255].\n\n";
 		return;
 	}
+
 	if (rule < 0 || rule > 255)
 	{
 		std::cout << "Invalid rule: '" << argument << "'. Value must be in range [0, 255].\n\n";

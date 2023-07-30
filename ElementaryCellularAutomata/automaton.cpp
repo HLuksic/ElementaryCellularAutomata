@@ -36,7 +36,7 @@ void Automaton::Run()
     else
         // draw screen sprite one pixel higher, new row at the bottom
         pge->DrawSprite(olc::vi2d(0, -1), pge->GetDrawTarget());
-
+    
     DrawCurrentGeneration();
 }
 
@@ -48,17 +48,16 @@ void Automaton::GenerateNextGeneration()
 
         if (wrap)
         {
-			left = currentGeneration[(i + (width - 1)) % width];
-			right = currentGeneration[(i + 1) % width];
-			center = currentGeneration[i];
-		}
+            left = currentGeneration[(i + (width - 1)) % width];
+            right = currentGeneration[(i + 1) % width];
+            center = currentGeneration[i];
+        }
         else
         {
-			left = !i ? false : currentGeneration[i - 1];
-			right = i == width - 1 ? false : currentGeneration[i + 1];
-			center = currentGeneration[i];
+            left = !i ? false : currentGeneration[i - 1];
+            right = i == width - 1 ? false : currentGeneration[i + 1];
+            center = currentGeneration[i];
 		}
-
         nextGeneration[i] = GetNextState(left, center, right);
     }
 }
