@@ -10,6 +10,7 @@ public:
 	void ParseInput(const std::string& text);
 
 private:
+	void IdentifyCommand(const std::string& command);
 	void IdentifyCommand(const std::string& command, const std::string& argument);
 	void SetAutomatonState(const std::string& state);
 	void SetAutomatonRule(const std::string& rule);

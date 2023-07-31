@@ -38,10 +38,31 @@ void Console::ParseInput(const std::string& text)
 	auto tokens = Tokenize(text);
 	if (tokens.empty())
 		return;
-	IdentifyCommand(tokens[0], tokens.size() > 1 ? tokens[1] : "");
+
+	tokens.size() > 1 ? IdentifyCommand(tokens[0], tokens[1]) :
+						IdentifyCommand(tokens[0]);
 }
 
 void Console::IdentifyCommand(const std::string& command, const std::string& argument)
+{
+	if (command == "setstate")
+	{
+		try { SetAutomatonState(argument); }
+		catch (...) { std::cout << "Invalid state: '" << argument << 
+								"'. Valid states: left, right, center, random.\n\n"; }
+	}
+	else if (command == "setrule")
+	{
+		try { SetAutomatonRule(argument); }
+		catch (...) { std::cout << "Invalid rule: '" << argument << 
+								"'. Value must be in range [0, 255].\n\n"; }
+	}
+	else
+		std::cout << "Invalid command: '" << command + " " + argument << 
+					 "'. Type 'help' for a list of commands.\n\n";
+}
+
+void Console::IdentifyCommand(const std::string& command)
 {
 	if (command == "help")
 		PrintHelpText();
@@ -53,10 +74,6 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 		pge->ConsoleClear();
 	else if (command == "wrap")
 		automaton->ToggleWrap();
-	else if (command == "setstate")
-		SetAutomatonState(argument);
-	else if (command == "setrule")
-		SetAutomatonRule(argument);
 	else
 		std::cout << "Invalid command: '" << command << "'. Type 'help' for a list of commands.\n\n";
 }
@@ -72,10 +89,8 @@ void Console::SetAutomatonState(const std::string& state)
 	else if (state == "random")
 		automaton->SetState(States::RANDOM);
 	else
-	{
-		std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n\n";
-		return;
-	}
+		throw new std::exception();
+
 	std::cout << "State set.\n\n";
 }
 
@@ -83,21 +98,13 @@ void Console::SetAutomatonRule(const std::string& argument)
 {
 	int rule = 0;
 	for (const char& c : argument)
-	{
 		if (!isdigit(c))
-		{
-			std::cout << "Invalid rule: '" << argument << 
-						 "'. Value must be in range [0, 255].\n\n";
-			return;
-		}
-	}
+			throw new std::exception();
+	
 	rule = std::stoi(argument);
 	
 	if (rule < 0 || rule > 255)
-	{
-		std::cout << "Invalid rule: '" << argument << "'. Value must be in range [0, 255].\n\n";
-		return;
-	}
+		throw new std::exception();
 
 	std::cout << "Rule set to " << rule << ".\n\n";
 	automaton->SetRule(rule);
