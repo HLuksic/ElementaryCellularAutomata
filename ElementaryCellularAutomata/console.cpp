@@ -28,7 +28,7 @@ static void PrintHelpText()
 	std::cout << "clear    - Clear console history.\n";
 	std::cout << "wrap     - Enable / disable wrapping\n\n";
 	std::cout << "Available shortcuts:\n";
-	std::cout << "CTRL - Pause / unpause\n";
+	std::cout << "CTRL - Run / pause\n";
 	std::cout << "R    - Reset\n\n";
 	std::cout << "Interesting rules: 30, 73, 90, 110, 184\n\n";
 }
@@ -38,7 +38,7 @@ void Console::ParseInput(const std::string& text)
 	auto tokens = Tokenize(text);
 	if (tokens.empty())
 		return;
-	IdentifyCommand(tokens[0], tokens[1]);
+	IdentifyCommand(tokens[0], tokens.size() > 1 ? tokens[1] : "");
 }
 
 void Console::IdentifyCommand(const std::string& command, const std::string& argument)
@@ -51,12 +51,12 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 		automaton->Reset();
 	else if (command == "clear")
 		pge->ConsoleClear();
+	else if (command == "wrap")
+		automaton->ToggleWrap();
 	else if (command == "setstate")
 		SetAutomatonState(argument);
 	else if (command == "setrule")
 		SetAutomatonRule(argument);
-	else if (command == "wrap")
-		automaton->ToggleWrap();
 	else
 		std::cout << "Invalid command: '" << command << "'. Type 'help' for a list of commands.\n\n";
 }
