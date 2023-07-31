@@ -82,29 +82,23 @@ void Console::SetAutomatonState(const std::string& state)
 void Console::SetAutomatonRule(const std::string& argument)
 {
 	int rule = 0;
-	bool ok = true;
-
 	for (const char& c : argument)
-		if (!isdigit(c)) 
-			ok = false;
-
-	try
 	{
-		rule = std::stoi(argument);
+		if (!isdigit(c))
+		{
+			std::cout << "Invalid rule: '" << argument << 
+						 "'. Value must be in range [0, 255].\n\n";
+			return;
+		}
 	}
-	catch (...)
-	{
-		ok = false;
-	}
-
+	rule = std::stoi(argument);
+	
 	if (rule < 0 || rule > 255)
-		ok = false;
-
-	if (!ok)
 	{
 		std::cout << "Invalid rule: '" << argument << "'. Value must be in range [0, 255].\n\n";
 		return;
 	}
-	automaton->SetRule(rule);
+
 	std::cout << "Rule set to " << rule << ".\n\n";
+	automaton->SetRule(rule);
 }
