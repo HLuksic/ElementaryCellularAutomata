@@ -64,19 +64,18 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 void Console::SetAutomatonState(const std::string& state)
 {
 	if (state == "center")
-		automaton->SetState(0);
+		automaton->SetState(States::CENTER);
 	else if (state == "left")
-		automaton->SetState(1);
+		automaton->SetState(States::LEFT);
 	else if (state == "right")
-		automaton->SetState(2);
+		automaton->SetState(States::RIGHT);
 	else if (state == "random")
-		automaton->SetState(3);
+		automaton->SetState(States::RANDOM);
 	else
 	{
 		std::cout << "Invalid state: '" << state << "'. Valid states: left, right, center, random.\n\n";
 		return;
 	}
-	automaton->Reset();
 	std::cout << "State set.\n\n";
 }
 

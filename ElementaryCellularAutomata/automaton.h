@@ -5,6 +5,17 @@
 const olc::Pixel LIVE_COLOR = olc::VERY_DARK_GREY;
 const olc::Pixel DEAD_COLOR = olc::DARK_GREY;
 
+namespace States
+{
+	enum State
+	{
+		CENTER = 0,
+		LEFT = 1,
+		RIGHT = 2,
+		RANDOM = 3
+	};
+}
+
 class Automaton
 {
 public:

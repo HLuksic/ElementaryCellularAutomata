@@ -1,17 +1,6 @@
 #include "automaton.h"
 #include <random>
 
-namespace States
-{
-    enum State
-    {
-        CENTER = 0,
-        LEFT = 1,
-        RIGHT = 2,
-        RANDOM = 3
-    };
-}
-
 Automaton::Automaton(olc::PixelGameEngine* pge)
 {
     this->pge = pge;
