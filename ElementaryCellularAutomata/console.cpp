@@ -48,14 +48,12 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 	if (command == "setstate")
 	{
 		try { SetAutomatonState(argument); }
-		catch (...) { std::cout << "Invalid state: '" << argument << 
-								"'. Valid states: left, right, center, random.\n\n"; }
+		catch (std::exception err) { std::cout << err.what(); }
 	}
 	else if (command == "setrule")
 	{
 		try { SetAutomatonRule(argument); }
-		catch (...) { std::cout << "Invalid rule: '" << argument << 
-								"'. Value must be in range [0, 255].\n\n"; }
+		catch (std::exception err) { std::cout << err.what(); }
 	}
 	else
 		std::cout << "Invalid command: '" << command + " " + argument << 
@@ -75,11 +73,12 @@ void Console::IdentifyCommand(const std::string& command)
 	else if (command == "wrap")
 		automaton->ToggleWrap();
 	else
-		std::cout << "Invalid command: '" << command << "'. Type 'help' for a list of commands.\n\n";
+		std::cout << "Invalid command: '" + command + "'. Type 'help' for a list of commands.\n\n";
 }
 
 void Console::SetAutomatonState(const std::string& state)
 {
+	const std::string err = "Invalid state: '" + state + "'. Valid states: left, right, center, random.\n\n";
 	if (state == "center")
 		automaton->SetState(States::CENTER);
 	else if (state == "left")
@@ -89,22 +88,22 @@ void Console::SetAutomatonState(const std::string& state)
 	else if (state == "random")
 		automaton->SetState(States::RANDOM);
 	else
-		throw new std::exception();
-
+		throw new std::exception(err.c_str());
+	
 	std::cout << "State set.\n\n";
 }
 
 void Console::SetAutomatonRule(const std::string& argument)
 {
+	const std::string err = "Invalid rule: '" + argument + "'. Value must be in range [0, 255].\n\n";
 	int rule = 0;
 	for (const char& c : argument)
 		if (!isdigit(c))
-			throw new std::exception();
+			throw new std::exception(err.c_str());
 	
 	rule = std::stoi(argument);
-	
 	if (rule < 0 || rule > 255)
-		throw new std::exception();
+		throw new std::exception(err.c_str());
 
 	std::cout << "Rule set to " << rule << ".\n\n";
 	automaton->SetRule(rule);
