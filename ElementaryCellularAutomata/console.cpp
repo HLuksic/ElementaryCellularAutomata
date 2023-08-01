@@ -23,12 +23,12 @@ Console::Console(olc::PixelGameEngine* pge, Automaton* automaton)
 	this->pge = pge;
 	this->automaton = automaton;
 	commandsNoArg["help"] = PrintHelpText;
-	commandsNoArg["getrule"] = [&]() { std::cout << "Current rule: " << automaton->GetRule() << "\n\n"; };
-	commandsNoArg["reset"] = [&]() { automaton->Reset(); };
-	commandsNoArg["clear"] = [&]() { pge->ConsoleClear(); };
-	commandsNoArg["wrap"] = [&]() { automaton->ToggleWrap(); };
-	commandsWithArg["setstate"] = [&](CStringRef arg) { SetAutomatonRule(arg); };
-	commandsWithArg["setrule"] = [&](CStringRef arg) { SetAutomatonRule(arg); };
+	commandsNoArg["getrule"] = [&]() { std::cout << "Current rule: " << this->automaton->GetRule() << "\n\n"; };
+	commandsNoArg["reset"] = [&]() { this->automaton->Reset(); };
+	commandsNoArg["clear"] = [&]() { this->pge->ConsoleClear(); };
+	commandsNoArg["wrap"] = [&]() { this->automaton->ToggleWrap(); };
+	commandsWithArg["setstate"] = [&](CStringRef arg) { this->SetAutomatonState(arg); };
+	commandsWithArg["setrule"] = [&](CStringRef arg) { this->SetAutomatonRule(arg); };
 }
 
 static auto Tokenize(CStringRef text)

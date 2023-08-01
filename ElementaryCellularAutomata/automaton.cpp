@@ -81,6 +81,8 @@ void Automaton::SetRule(unsigned int rule)
 void Automaton::SetState(unsigned int state)
 {
     this->state = state;
+    if (row == 0)
+        Reset();
 }
 
 void Automaton::ToggleWrap()
