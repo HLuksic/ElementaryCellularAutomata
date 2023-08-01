@@ -27,11 +27,11 @@ Console::Console(olc::PixelGameEngine* pge, Automaton* automaton)
 	commandsNoArg["reset"] = [&]() { automaton->Reset(); };
 	commandsNoArg["clear"] = [&]() { pge->ConsoleClear(); };
 	commandsNoArg["wrap"] = [&]() { automaton->ToggleWrap(); };
-	commandsWithArg["setstate"] = [&](const std::string& arg) { SetAutomatonRule(arg); };
-	commandsWithArg["setrule"] = [&](const std::string& arg) { SetAutomatonRule(arg); };
+	commandsWithArg["setstate"] = [&](CStringRef arg) { SetAutomatonRule(arg); };
+	commandsWithArg["setrule"] = [&](CStringRef arg) { SetAutomatonRule(arg); };
 }
 
-static auto Tokenize(const std::string& text)
+static auto Tokenize(CStringRef text)
 {
 	std::vector<std::string> tokens;
 	std::istringstream iss(text);
@@ -41,7 +41,7 @@ static auto Tokenize(const std::string& text)
 	return tokens;
 }
 
-void Console::ParseInput(const std::string& text)
+void Console::ParseInput(CStringRef text)
 {
 	auto tokens = Tokenize(text);
 	if (tokens.empty())
@@ -51,7 +51,7 @@ void Console::ParseInput(const std::string& text)
 						IdentifyCommand(tokens[0], "");
 }
 
-void Console::IdentifyCommand(const std::string& command, const std::string& argument)
+void Console::IdentifyCommand(CStringRef command, CStringRef argument)
 {
 	CmdNoArgMapIt noArgIt = commandsNoArg.find(command);
 	CmdArgMapIt argIt = commandsWithArg.find(command);
@@ -61,17 +61,15 @@ void Console::IdentifyCommand(const std::string& command, const std::string& arg
 		noArgIt->second();
 		return;
 	}
-
 	if (argIt != commandsWithArg.end())
 	{
 		argIt->second(argument);
 		return;
 	}
-
 	std::cout << "Invalid command: '" << command << "'. Type 'help' for a list of commands.\n\n";
 }
 
-void Console::SetAutomatonState(const std::string& state)
+void Console::SetAutomatonState(CStringRef state)
 {
 	if (state == "center")
 		automaton->SetState(States::CENTER);
@@ -89,7 +87,7 @@ void Console::SetAutomatonState(const std::string& state)
 	std::cout << "State set.\n\n";
 }
 
-void Console::SetAutomatonRule(const std::string& argument)
+void Console::SetAutomatonRule(CStringRef argument)
 {
 	for (const char& c : argument)
 	{

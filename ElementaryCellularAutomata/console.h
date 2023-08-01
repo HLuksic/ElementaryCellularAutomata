@@ -3,22 +3,22 @@
 #include "olcPixelGameEngine.h"
 #include "automaton.h"
 
-typedef std::unordered_map<std::string, std::function<void(void)>> CmdNoArgMap;
-typedef std::unordered_map<std::string, std::function<void(const std::string&)>> CmdArgMap;
-typedef CmdNoArgMap::const_iterator CmdNoArgMapIt;
-typedef CmdArgMap::const_iterator CmdArgMapIt;
-
+using CStringRef  = const std::string&;
+using CmdNoArgMap = std::unordered_map<std::string, std::function<void(void)>>;
+using CmdArgMap   = std::unordered_map<std::string, std::function<void(CStringRef)>>;
+using CmdNoArgMapIt = CmdNoArgMap::const_iterator;
+using CmdArgMapIt   = CmdArgMap::const_iterator;
 
 class Console
 {
 public:
 	Console(olc::PixelGameEngine* pge, Automaton* automaton);
-	void ParseInput(const std::string& text);
+	void ParseInput(CStringRef text);
 
 private:
-	void IdentifyCommand(const std::string& command, const std::string& argument);
-	void SetAutomatonState(const std::string& state);
-	void SetAutomatonRule(const std::string& rule);
+	void IdentifyCommand(CStringRef command, CStringRef argument);
+	void SetAutomatonState(CStringRef state);
+	void SetAutomatonRule(CStringRef rule);
 	olc::PixelGameEngine* pge;
 	CmdNoArgMap commandsNoArg;
 	CmdArgMap commandsWithArg;
