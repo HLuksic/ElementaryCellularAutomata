@@ -48,7 +48,7 @@ void Console::ParseInput(CStringRef text)
 		return;
 
 	tokens.size() > 1 ? IdentifyCommand(tokens[0], tokens[1]) :
-						IdentifyCommand(tokens[0], "");
+						IdentifyCommand(tokens[0], " ");
 }
 
 void Console::IdentifyCommand(CStringRef command, CStringRef argument)
