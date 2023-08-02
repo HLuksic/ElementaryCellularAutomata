@@ -93,14 +93,14 @@ void Console::SetAutomatonRule(CStringRef argument)
 	{
 		if (!isdigit(c))
 		{
-			"Invalid rule: '" + argument + "'. Value must be in range [0, 255].\n\n"; 
+			std::cout << "Invalid rule: '" + argument + "'. Value must be in range [0, 255].\n\n"; 
 			return;
 		}
 	}
 	int rule = std::stoi(argument);
 	if (rule < 0 || rule > 255)
 	{
-		"Invalid rule: '" + argument + "'. Value must be in range [0, 255].\n\n";
+		std::cout << "Invalid rule: '" + argument + "'. Value must be in range [0, 255].\n\n";
 		return;
 	}
 	std::cout << "Rule set to " << rule << ".\n\n";
