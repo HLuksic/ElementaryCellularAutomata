@@ -53,7 +53,7 @@ void Automaton::GenerateNextGeneration()
 
 bool Automaton::GetNextState(bool left, bool center, bool right)
 {
-    unsigned int ruleIndex = (left ? 4 : 0) + (center ? 2 : 0) + (right ? 1 : 0);
+    unsigned int ruleIndex = left * 4 + center * 2 + right;
     return (rule >> ruleIndex) & 1;
 }
 
@@ -110,26 +110,10 @@ void Automaton::Reset()
     
     switch (state)
     {
-    case States::CENTER:
-    {
-        SetSpecificStartingState(width / 2);
-        break;
-    }
-    case States::LEFT:
-    {
-        SetSpecificStartingState(0);
-        break;
-    }
-    case States::RIGHT:
-    {
-        SetSpecificStartingState(width - 1);
-        break;
-    }
-    case States::RANDOM:
-    {
-        SetRandomStartingState();
-        break;
-    }
+    case States::CENTER: SetSpecificStartingState(width / 2); break;
+    case States::LEFT: SetSpecificStartingState(0); break;
+    case States::RIGHT: SetSpecificStartingState(width - 1); break;
+    case States::RANDOM: SetRandomStartingState(); break;
     }
     DrawCurrentGeneration();
 }

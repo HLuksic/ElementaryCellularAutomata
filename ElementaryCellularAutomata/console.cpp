@@ -1,6 +1,5 @@
 #include "console.h"
 #include <iostream>
-#include <cstdarg>
 
 static void PrintHelpText()
 {
